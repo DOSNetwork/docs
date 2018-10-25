@@ -8,4 +8,4 @@
 * :heavy_check_mark: Highly scalable and provably secure with low cost
 * :heavy_check_mark: Compatible to heterogeneous blockchains
 
-[Getting Started](/blockchains/ethereum?id=quick-start)
+[Getting Started](contents/blockchains/ethereum?id=quick-start)

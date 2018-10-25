@@ -3,5 +3,5 @@ Build with [Docsify](https://docsify.js.org/#/quickstart), hostable on Github Pa
 
 ### Contribution guide:
 - Install docsify: ```npm i docsify-cli -g```
-- Edit markdown files under docs/ directory.
+- Edit markdown files under contents/ directory.
 - Test locally by ```docsify serve .```

@@ -3,9 +3,8 @@ Several APIs are released in the Alpha version that are useful to developers.
 
 #### Retrieving external data:
 - Smart contract requests for external data by calling `DOSQuery()` function. The whole process is an asynchronous one - i.e. it merely returns a unique `queryId` that caller caches for bookkeeping and future identification, with the real response coming back through the `__callback__()` function.
-- The response data will be backfilled through the `__callback__` function along with corresponding `queryId`. There's no parsing or filtering for the (current) #alpha release - the raw response will be returned and the caller is responsible for parsing themselves. However, the integration of `JSONPath` and `XPath` parsers in the client side is happening soon, developers are able to specify the return data format and filter out interesting data fields using the [`selector`](#selector) syntax in the `DOSQuery()` function.
+- The response data will be backfilled through the `__callback__` function along with corresponding `queryId`. There's no parsing or filtering for the (current) #alpha release - the raw response will be returned and the caller is responsible for parsing themselves. However, the integration of [JSONPath](https://www.npmjs.com/package/jsonpath) and [XPath](https://en.wikipedia.org/wiki/XPath) parsers in the client side is happening soon, developers are able to specify the return data format and filter out interesting data fields using the [selector](#selector) syntax in the `DOSQuery()` function.
 - Example usage:
-
 
 <!-- tabs:start -->
 
@@ -28,11 +27,6 @@ Several APIs are released in the Alpha version that are useful to developers.
       ...
   }
   ```
-
-#### ** Test snippet **
-
-[eth sample code](https://ethfiddle.com/2Rx8cQdEx3 ':include :type=iframe width=100% height=400px')
-
 
 #### ** DOSQuery() <small>*(Post-alpha & Beta version)*</small> **
   ```function DOSQuery(uint timeout, string dataSource, string selector) returns (uint)```:
@@ -108,7 +102,7 @@ In Beta.
 
 
 #### Selector
-For query requests, instead of returning the bulk raw data it's always encouraged to specify what exact components are needed in the smart contract, to save caller's money and speed up processing time. The selector is following the   [JSONPath](https://www.npmjs.com/package/jsonpath) and [XPath]() syntax to filter components from responses.
+The selector syntax is following `JSONPath` and `XPath` syntax to filter components from responses.
 ##### Json example and selector expression:
 ```js
 {

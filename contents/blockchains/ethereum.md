@@ -1,81 +1,96 @@
 ## Quick Start
 Several APIs are released in the Alpha version that are useful to developers.
 
-#### Retrieving external data:
+### Retrieving external data:
 - Smart contract requests for external data by calling `DOSQuery()` function. The whole process is an asynchronous one - i.e. it merely returns a unique `queryId` that caller caches for bookkeeping and future identification, with the real response coming back through the `__callback__()` function.
 - The response data will be backfilled through the `__callback__` function along with corresponding `queryId`. There's no parsing or filtering for the (current) #alpha release - the raw response will be returned and the caller is responsible for parsing themselves. However, the integration of [JSONPath](https://www.npmjs.com/package/jsonpath) and [XPath](https://en.wikipedia.org/wiki/XPath) parsers in the client side is happening soon, developers are able to specify the return data format and filter out interesting data fields using the [selector](#selector) syntax in the `DOSQuery()` function.
 - Example usage:
 
 <!-- tabs:start -->
-
-#### ** DOSQuery() <small>*(Alpha version)*</small> **
-  ```function DOSQuery(uint timeout, string queryType, string queryString) returns (uint)```:
-  - `timeout`: is a
-  - `queryType`: 
-  - `queryString`: Path or url to the data source specified by the caller.
-  - Example usage:
-  ```js
-  contract Example is Ownable, DOSOnChainSDK {
-      mapping(uint => bool) private _valid_queries;
-      ...
-      function fetchCoinbaseEthUsd() public onlyOwner {
-          // Returns a unique queryId that caller caches for future verification
-          uint queryId = DOSQuery(30, "API", "https://api.coinbase.com/v2/prices/ETH-USD/spot");
-          _valid_queries[queryId] = true;
-          ...
-      }
-      ...
-  }
-  ```
-
-#### ** DOSQuery() <small>*(Post-alpha & Beta version)*</small> **
-  ```function DOSQuery(uint timeout, string dataSource, string selector) returns (uint)```:
-  - `timeout`:
-  - `dataSource`:
-  - `selector`:
-  - Example usage:
-    ```js
-    contract Example is Ownable, DOSOnChainSDK {
-        mapping(uint => bool) private _valid_queries;
-        ...
-        function fetchCoinbaseEthUsd() public onlyOwner {
-            // Returns a unique queryId that caller caches for future verification
-            uint queryId = DOSQuery(30, "https://api.coinbase.com/v2/prices/ETH-USD/spot", "$.data.amount");
-            _valid_queries[queryId] = true;
-            ...
-        }
+#### **DOSQuery API <small>*(Alpha version)*</small>**
+`function DOSQuery(uint timeout, string queryType, string queryString) returns (uint)`:
+- `timeout`: An estimated timeout in seconds specified by the caller, e.g. `30`. Response is not guaranteed if client side processing time exceeds this value.
+- `queryType`: Type of query request specified by caller. Only `'API'` queryType is supported in Alpha release.
+- `queryString`: Path to the data source specified by caller.
+- Example usage:
+```solidity
+contract Example is Ownable, DOSOnChainSDK {
+    mapping(uint => bool) private _valid_queries;
+    ...
+    function fetchCoinbaseEthUsd() public onlyOwner {
+        // Returns a unique queryId that caller caches for future verification
+        uint queryId = DOSQuery(30, "API", "https://api.coinbase.com/v2/prices/ETH-USD/spot");
+        _valid_queries[queryId] = true;
         ...
     }
-    ```
-    
+    ...
+}
+```
+
+#### **DOSQuery API <small>*(Post-alpha & Beta version)*</small>**
+`function DOSQuery(uint timeout, string dataSource, string selector) returns (uint)`:
+- `timeout`: An estimated timeout in seconds specified by the caller, e.g. `30`. Response is not guaranteed if client side processing time exceeds this value.
+- `dataSource`: Path to the data source specified by caller.
+- `selector`: A `selector expression` provided by caller to filter out specific data fields out of the raw response, with the response data format (json, xml, or more) to be identified from the selector expression. Check the [selector syntax](#selector) part for details.
+- Example usage:
+```solidity
+contract Example is Ownable, DOSOnChainSDK {
+    mapping(uint => bool) private _valid_queries;
+    ...
+    function fetchCoinbaseEthUsd() public onlyOwner {
+        // Returns a unique queryId that caller caches for future verification
+        uint queryId = DOSQuery(30, "https://api.coinbase.com/v2/prices/ETH-USD/spot", "$.data.amount");
+        _valid_queries[queryId] = true;
+        ...
+    }
+    ...
+}
+```
+
+#### **\_\_callback\_\_() API**
+<p>Note that the caller must override `__callback__` function to receive and process the response. A user-defined event may be added to notify the Dapp frontend that the response is ready.</p>
+`function __callback__(uint queryId, bytes result) external`:
+- `queryId`: A unique `queryId` returned by `DOSQuery()` to differenciate parallel responses.
+- `result`: Corresponding response in `bytes`.
+- Example usage:
+```solidity
+function __callback__(uint queryId, bytes result) external {
+    // Exclude malicious callback responses.
+    require(msg.sender == fromDOSProxyContract());
+    // Check whether @queryId corresponds to a previous cached one
+    require(_valid_queries[queryId], "Response with invalid queryId!");
+
+    // Deal with result
+    ...
+    delete _valid_queries[queryId];
+}
+```
 <!-- tabs:end -->
 
+
+### Requesting for secure and unmanipulatable random numbers:
 <!-- tabs:start -->
 
-#### ** \_\_callback\_\_() function **
-  ```function __callback__(uint queryId, bytes result) external```:
-  - `queryId`
-  - `result`
-  - Example:
-  ```solidity
-  function __callback__(uint queryId, bytes result) external {
-      // Exclude malicious callback responses.
-      require(msg.sender == fromDOSProxyContract());
-      // Check whether @queryId corresponds to a previous cached one
-      require(_valid_queries[queryId], "Response with invalid queryId!");
+#### **DOSRadom() API**
+`function DOSRandom(uint8 mode, uint seed) returns (uint)`:
+- `mode`:
+- `seed`:
+- Example usage:
+```solidity
+fillin
+```
 
-      // Deal with result
-      ...
-      delete _valid_queries[queryId];
-  }
-  ```
+#### **\_\_callback\_\_() API**
+`function ___callback__(uint requestId, uint generatedRandom) external`:
+- `requestId`:
+- `generatedRandom`:
+- Example usage:
+```solidity
+fillin
+```
 
 <!-- tabs:end -->
 
-
-#### Requesting for secure and unmanipulatable random numbers:
-- ```function DOSRandom(uint8 mode, uint seed) returns (uint)```:
-- ```function __callback__(uint requestId, uint generatedRandom) external```:
 
 
 ## Deployed Contracts on Rinkeby testnet

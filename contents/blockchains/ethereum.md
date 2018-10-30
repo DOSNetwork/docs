@@ -3,7 +3,7 @@ Several APIs are released in the Alpha version that are useful to developers.
 
 ### Retrieving external data:
 - Smart contract requests for external data by calling `DOSQuery()` function. The whole process is an asynchronous one - i.e. it merely returns a unique `queryId` that caller caches for bookkeeping and future identification, with the real response coming back through the `__callback__()` function.
-- The response data will be backfilled through the `__callback__` function along with corresponding `queryId`. Instead of backfill the raw response we're using [selector expression](#selector) following [JSONPath](https://www.npmjs.com/package/jsonpath) and [XPath](https://en.wikipedia.org/wiki/XPath) syntax, developers are able to specify and filter out interesting data fields in `DOSQuery()` function.
+- The response data will be backfilled through the `__callback__` function along with corresponding `queryId`. Instead of backfilling the whole raw response we're using [selector expression](#selector) to filter `json` and `xml/html` formated response, developers are able to specify interesting data fields in `DOSQuery()` function.
 - Example usage:
 
 <!-- tabs:start -->
@@ -11,7 +11,7 @@ Several APIs are released in the Alpha version that are useful to developers.
 `function DOSQuery(uint timeout, string dataSource, string selector) returns (uint)`:
 - `timeout`: An estimated timeout in seconds specified by the caller, e.g. `30`. Response is not guaranteed if client side processing time exceeds this value.
 - `dataSource`: Path to the data source specified by caller.
-- `selector`: A `selector expression` provided by caller to filter out specific data fields out of the raw response, with the response data format (json, xml, or more) to be identified from the selector expression. Check the [selector syntax](#selector) part for details.
+- `selector`: A `selector expression` provided by caller to filter out specific data fields out of the raw response, with the response data format (json, xml, or more) to be identified from the selector expression. Check the [selector expression](#selector) part for details.
 - Example usage:
 ```solidity
 contract Example is Ownable, DOSOnChainSDK {
@@ -128,7 +128,7 @@ In Beta.
 
 
 #### Selector
-The selector syntax is following `JSONPath` and `XPath` syntax to filter components from responses.
+The selector expression is following [JSONPath](https://www.npmjs.com/package/jsonpath) and [XPath](https://en.wikipedia.org/wiki/XPath) rules to filter components from responses.
 ##### Json example and selector expression:
 ```js
 {

@@ -3,31 +3,11 @@ Several APIs are released in the Alpha version that are useful to developers.
 
 ### Retrieving external data:
 - Smart contract requests for external data by calling `DOSQuery()` function. The whole process is an asynchronous one - i.e. it merely returns a unique `queryId` that caller caches for bookkeeping and future identification, with the real response coming back through the `__callback__()` function.
-- The response data will be backfilled through the `__callback__` function along with corresponding `queryId`. There's no parsing or filtering for the (current) #alpha release - the raw response will be returned and the caller is responsible for parsing themselves. However, the integration of [JSONPath](https://www.npmjs.com/package/jsonpath) and [XPath](https://en.wikipedia.org/wiki/XPath) parsers in the client side is happening soon, developers are able to specify the return data format and filter out interesting data fields using the [selector](#selector) syntax in the `DOSQuery()` function.
+- The response data will be backfilled through the `__callback__` function along with corresponding `queryId`. Instead of backfill the raw response we're using [selector expression](#selector) following [JSONPath](https://www.npmjs.com/package/jsonpath) and [XPath](https://en.wikipedia.org/wiki/XPath) syntax, developers are able to specify and filter out interesting data fields in `DOSQuery()` function.
 - Example usage:
 
 <!-- tabs:start -->
-#### **DOSQuery API <small>*(Alpha version)*</small>**
-`function DOSQuery(uint timeout, string queryType, string queryString) returns (uint)`:
-- `timeout`: An estimated timeout in seconds specified by the caller, e.g. `30`. Response is not guaranteed if client side processing time exceeds this value.
-- `queryType`: Type of query request specified by caller. Only `'API'` queryType is supported in Alpha release.
-- `queryString`: Path to the data source specified by caller.
-- Example usage:
-```solidity
-contract Example is Ownable, DOSOnChainSDK {
-    mapping(uint => bool) private _valid_queries;
-    ...
-    function fetchCoinbaseEthUsd() public onlyOwner {
-        // Returns a unique queryId that caller caches for future verification
-        uint queryId = DOSQuery(30, "API", "https://api.coinbase.com/v2/prices/ETH-USD/spot");
-        _valid_queries[queryId] = true;
-        ...
-    }
-    ...
-}
-```
-
-#### **DOSQuery API <small>*(Post-alpha & Beta version)*</small>**
+#### **DOSQuery() API **
 `function DOSQuery(uint timeout, string dataSource, string selector) returns (uint)`:
 - `timeout`: An estimated timeout in seconds specified by the caller, e.g. `30`. Response is not guaranteed if client side processing time exceeds this value.
 - `dataSource`: Path to the data source specified by caller.
@@ -68,25 +48,55 @@ function __callback__(uint queryId, bytes result) external {
 <!-- tabs:end -->
 
 
-### Requesting for secure and unmanipulatable random numbers:
+
+### Requesting for secure and unpredictable random numbers:
+- Randomness is particularly important for many Dapps and games, however, it's impossible to generate a secure and unpredictable random number in pure deterministic environment: ![peter\_szilagyi](../../_media/random.png)
+- DOS Network is providing a provably secure, unstoppable and unpreditable random source for on-chain smart contracts to use. For technical details and cryptographic proofs please check our [whitepaper]().
+
 <!-- tabs:start -->
 
 #### **DOSRadom() API**
 `function DOSRandom(uint8 mode, uint seed) returns (uint)`:
-- `mode`:
-- `seed`:
+- `mode`: Currently we support 2 modes:
+  - `1 (safe mode)`: An asynchronous but safe way to generate a new secure random number using *VRF and Threshold Signature* by a randomly selected group of off-chain clients. The newly generated secure random number is the threshold signature of the collectively signed message `(requestId || last round's secure randomness selecting the group || seed)`. Like queries, `DOSRandom()` returns a unique `requestId` for safe mode and the generated secure random number will be backfilled through the *(overloaded)* `__callback__()` function. There would be a fee to run in safe mode in future mainnet release.
+  - `0 (fast mode)`: Return an *insecure* random number directly, which is the sha3 hash of `(last round's secure random number || seed)`. Note that `fast mode` is for testing purpose only and it should NOT be deemed as safe in production usage. It's always free of charge.
+- `seed`: An *optional* random seed provided by caller to get more entropy. The generated random number is secure and unpreditable in safe mode even without providing this `seed`.
 - Example usage:
 ```solidity
-fillin
+function requestSafeRandom() public {
+    uint requestId = DOSRandom(1, now);
+    _valid[requestId] = true;
+    emit RandomRequested(requestId);
+}
 ```
 
 #### **\_\_callback\_\_() API**
 `function ___callback__(uint requestId, uint generatedRandom) external`:
-- `requestId`:
-- `generatedRandom`:
+- `requestId`: A unique `requestId` returned by `DOSRandom()` to process parallelly generated random numbers.
+- `generatedRandom`: Generated secure random number for the specific `requestId`.
 - Example usage:
+
 ```solidity
-fillin
+modifier auth(uint id) {
+    // Exclude malicious callback responses.
+    require(msg.sender == fromDOSProxyContract(),
+            "Unauthenticated response from non-DOS.");
+    // Check whether id mapps to a previously requested one.
+    require(_valid[id], "Response with invalid request id!");
+    _;
+}
+
+function __callback__(uint requestId, uint generatedRandom)
+    external
+    auth(requestId)
+{
+    emit RandomGenerated(generatedRandom);
+    delete _valid[requestId];
+
+    // Deal with generated random number
+    random = generatedRandom;
+    ...
+}
 ```
 
 <!-- tabs:end -->
@@ -116,64 +126,65 @@ In Beta.
 #### Examples
 
 
+
 #### Selector
 The selector syntax is following `JSONPath` and `XPath` syntax to filter components from responses.
 ##### Json example and selector expression:
 ```js
 {
-  "store": {
-    "book": [ 
-      {
-        "category": "reference",
-        "author": "Nigel Rees",
-        "title": "Sayings of the Century",
-        "price": 8.95
-      }, {
-        "category": "fiction",
-        "author": "Evelyn Waugh",
-        "title": "Sword of Honour",
-        "price": 12.99
-      }, {
-        "category": "fiction",
-        "author": "Herman Melville",
-        "title": "Moby Dick",
-        "isbn": "0-553-21311-3",
-        "price": 8.99
-      }, {
-         "category": "fiction",
-        "author": "J. R. R. Tolkien",
-        "title": "The Lord of the Rings",
-        "isbn": "0-395-19395-8",
-        "price": 22.99
-      }
-    ],
-    "bicycle": {
-      "color": "red",
-      "price": 19.95
-    }
-  }
+    "store": {
+        "book": [
+            {
+                "category": "reference",
+                "author": "Nigel Rees",
+                "title": "Sayings of the Century",
+                "price": 8.95
+            },
+            {
+                "category": "fiction",
+                "author": "Evelyn Waugh",
+                "title": "Sword of Honour",
+                "price": 12.99
+            },
+            {
+                "category": "fiction",
+                "author": "Herman Melville",
+                "title": "Moby Dick",
+                "isbn": "0-553-21311-3",
+                "price": 8.99
+            },
+            {
+                "category": "fiction",
+                "author": "J. R. R. Tolkien",
+                "title": "The Lord of the Rings",
+                "isbn": "0-395-19395-8",
+                "price": 22.99
+            }
+        ],
+        "bicycle": {
+            "color": "red",
+            "price": 19.95
+        }
+    },
+    "expensive": 10
 }
 ```
 Example selector expressions for the above json object:
 
-Selector expression           | Description
-------------------------------|------------
-$.store.book[*].author        | The authors of all books in the store
-$..author                     | All authors
-$.store.*                     | All things in store, which are some books and a red bicycle
-$.store..price                | The price of everything in the store
-$..book[2]                    | The third book
-$..book[(@.length-1)]         | The last book via script subscript
-$..book[-1:]                  | The last book via slice
-$..book[0,1]                  | The first two books via subscript union
-$..book[:2]                   | The first two books via subscript array slice
-$..book[?(@.isbn)]            | Filter all books with isbn number
-$..book[?(@.price<10)]        | Filter all books cheaper than 10
-$..book[?(@.price==8.95)]     | Filter all books that cost 8.95
-$..book[?(@.price<30 && @.category=="fiction")]        | Filter all fiction books cheaper than 30
-$..*                          | All members of JSON structure
 
-* Use this [online tool](http://jsonpath.com/) to get familar with JSONPath selector.
+Selector expression           | Description
+----------------------------- | --------------
+$.expensive 			                               | 10
+$.store.book[0].price                            | 8.95
+$.store.book[-1].isbn                            | "0-395-19395-8"
+$.store.book[0,1].price                          | [8.95, 12.99]
+$.store.book[0:2].price                          | [8.95, 12.99, 8.99]
+$.store.book[?(@.isbn)].price                    |  [8.99, 22.99]
+$.store.book[?(@.price > 10)].title              | ["Sword of Honour", "The Lord of the Rings"]
+$.store.book[?(@.price < $.expensive)].price     | [8.95, 8.99]
+$.store.book[:].price                            | [8.9.5, 12.99, 8.9.9, 22.99]
+
+* Use this [online tool](https://codebeautify.org/jsonpath-tester) to get familar with JSONPath selector.
 
 ##### XML example and selector expression:
 ```xml
@@ -207,7 +218,7 @@ Example selector expressions for the above xml document:
 Selector expression           | Description
 ------------------------------|------------
 /library/book/isbn                               |  "0836217462"
-library/*/isbn                                   |  "0836217462"
+/library/*/isbn                                  |  "0836217462"
 /library/book/../book/./isbn                     |  "0836217462"
 /library/book/character[2]/name                  |  "Snoopy"
 /library/book/character[born='1950-10-04']/name  |  "Snoopy"
@@ -217,4 +228,4 @@ library/*/isbn                                   |  "0836217462"
 //*[contains(born,'1922')]/name                  |  "Charles M Schulz"
 //*[@id='PP' or @id='Snoopy']/born               |  {"1966-08-22", "1950-10-04"}
 
-* Use this [online tool]() to get familar with XPath selector.
+* Use this [online tool](http://www.utilities-online.info/xpath) to get familar with XPath selector.

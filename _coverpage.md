@@ -9,3 +9,6 @@
 * :heavy_check_mark: Compatible to heterogeneous blockchains
 
 [Getting Started](contents/blockchains/ethereum?id=quick-start)
+
+<!-- background image -->
+![](linear-gradient(to left bottom, hsl(99, 100%, 85%) 0%, hsl(40, 100%, 85%) 100%))

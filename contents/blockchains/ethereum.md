@@ -1,6 +1,4 @@
 ## Quick Start
-Several APIs are released in the Alpha version that are useful to developers.
-
 ### Retrieving external data:
 - Smart contract requests for external data by calling `DOSQuery()` function. The whole process is an asynchronous one - i.e. it merely returns a unique `queryId` that caller caches for bookkeeping and future identification, with the real response coming back through the `__callback__()` function.
 - The response data will be backfilled through the `__callback__` function along with corresponding `queryId`. Instead of backfilling the whole raw response we're using [selector expression](#selector) to filter `json` and `xml/html` formated response, developers are able to specify interesting data fields in `DOSQuery()` function.
@@ -102,7 +100,7 @@ function requestSafeRandom() public {
 ```
 
 #### **\_\_callback\_\_() API**
-`function ___callback__(uint requestId, uint generatedRandom) external`:
+`function __callback__(uint requestId, uint generatedRandom) external`:
 - `requestId`: A unique `requestId` returned by `DOSRandom()` to process parallelly generated random numbers.
 - `generatedRandom`: Generated secure random number for the specific `requestId`.
 - Example usage:
@@ -155,7 +153,135 @@ In Beta.
 
 ## More
 #### Examples
+- **Example 1**: `Query` latest ETH-USD price from Coinbase. Try this gist on [remix](http://remix.ethereum.org/#gist=f39845c47564c9ff98085749bd542d44&optimize=false&version=soljson-v0.4.25+commit.59dbf8f1.js). This example is also [deployed]() on rinkeby testnet.
+```solidity
+  pragma solidity ^0.4.24;
 
+  import "./Ownable.sol";
+  import "./DOSOnChainSDK.sol";
+
+  contract CoinbaseEthUsd is Ownable, DOSOnChainSDK {
+      // Struct to hold parsed floating string "123.45"
+      struct ethusd {
+          uint integral;
+          uint fractional;
+      }
+      uint queryId;
+      string public price_str;
+      ethusd public prices;
+
+      function check() private {
+          queryId = DOSQuery(30, "https://api.coinbase.com/v2/prices/ETH-USD/spot", "$.data.amount");
+      }
+
+      modifier auth {
+          // Filter out malicious __callback__ callers.
+          require(msg.sender == fromDOSProxyContract(), "Unauthenticated response");
+          _;
+      }
+
+      function __callback__(uint id, bytes result) external auth {
+          require(queryId == id, "Unmatched response");
+
+          price_str = string(result);
+          prices.integral = price_str.str2Uint();
+          int delimit_idx = price_str.indexOf('.');
+          if (delimit_idx != -1) {
+              prices.fractional = price_str.subStr(uint(delimit_idx + 1)).str2Uint();
+          }
+      }
+  }
+```
+- **Example 2**: A `SimpleDice` game with no house edge based on secure and unpredictable random number generation. Try it out on [remix](http://remix.ethereum.org/#gist=3b2ca0410af407497bdc70ffe79ee123&optimize=false&version=soljson-v0.4.25+commit.59dbf8f1.js). This example is also [deployed]() on rinkeby testnet.
+```solidity
+  pragma solidity ^0.4.24;
+
+  import "./Ownable.sol";
+  import "./DOSOnChainSDK.sol";
+
+  contract SimpleDice is Ownable, DOSOnChainSDK {
+      address public devAddress = 0x1738A04F8942489E68d39409bA9C5c7864C2D754;
+      // 1% winning payout goes to developer account
+      uint public developCut = 1;
+      // precise to 4 digits after decimal point.
+      uint public decimal = 4;
+      // gameId => gameInfo
+      mapping(uint => DiceInfo) games;
+
+      struct DiceInfo {
+          uint rollUnder;  // betted number, player wins if random < rollUnder
+          uint amountBet;  // amount in wei
+          address player;  // better address
+      }
+
+      event ReceivedBet(
+          uint gameId,
+          uint rollUnder,
+          uint weiBetted,
+          address better
+      );
+      event PlayerWin(uint generated, uint betted, uint amountWin);
+      event PlayerLose(uint generated, uint betted);
+
+      modifier auth {
+          // Filter out malicious __callback__ callers.
+          require(msg.sender == fromDOSProxyContract(), "Unauthenticated response");
+          _;
+      }
+
+      // 100 / (rollUnder - 1) * (1 - 0.01) => 99 / (rollUnder - 1)
+      // Not using SafeMath as this function cannot overflow anyway.
+      function computeWinPayout(uint rollUnder) public view returns(uint) {
+          return 99 * (10 ** decimal) / (rollUnder - 1);
+      }
+
+      // 100 / (rollUnder - 1) * 0.01
+      function computeDeveloperCut(uint rollUnder) public view returns(uint) {
+          return 10 ** decimal / (rollUnder - 1);
+      }
+
+      function play(uint rollUnder) public payable {
+          // winChance within [1%, 95%]
+          require(rollUnder >= 2 && rollUnder <= 96, "rollUnder should be in 2~96");
+          // Make sure contract has enough balance to cover payouts before game.
+          // Not using SafeMath as I'm not expecting this demo contract's
+          // balance to be very large.
+          require(address(this).balance * (10 ** decimal) >= msg.value * computeWinPayout(rollUnder),
+                  "Game contract doesn't have enough balance, decrease rollUnder");
+
+          // Request a safe, unmanipulatable random number from DOS Network with
+          // optional seed.
+          uint gameId = DOSRandom(1, now);
+
+          games[gameId] = DiceInfo(rollUnder, msg.value, msg.sender);
+          // Emit event to notify Dapp frontend
+          emit ReceivedBet(gameId, rollUnder, msg.value, msg.sender);
+      }
+
+      function __callback__(uint requestId, uint generatedRandom) external auth {
+          address player = games[requestId].player;
+          require(player != address(0x0));
+
+          uint gen_rnd = generatedRandom % 100 + 1;
+          uint rollUnder = games[requestId].rollUnder;
+          uint betted = games[requestId].amountBet;
+          delete games[requestId];
+
+          if (gen_rnd < rollUnder) {
+              // Player wins
+              uint payout = betted * computeWinPayout(rollUnder) / (10 ** decimal);
+              uint devPayout = betted * computeDeveloperCut(rollUnder) / (10 ** decimal);
+
+              emit PlayerWin(gen_rnd, rollUnder, payout);
+              player.transfer(payout);
+              devAddress.transfer(devPayout);
+          } else {
+              // Lose
+              emit PlayerLose(gen_rnd, rollUnder);
+          }
+      }
+  }
+```
 
 
 #### Selector

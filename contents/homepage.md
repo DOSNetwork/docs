@@ -15,6 +15,6 @@ DOS NETWORK is consist of two part: on-chain contracts part and off-chain p2p ne
 
 Our vision is to offer oracle service to all mainstream public chains. But currently, we are focusing on supporting Ethereum first, since Ethereum has the largest technical community and most abundant applications.
 
-We just released alpha version private testnet of data feed oracle on Rinkeby, which is a great development and testing network for Ethereum. So you can try to create your own contract based on our sdk right now in a testing network environment.
+We just released **alpha version private testnet of data feed oracle on Rinkeby**, which is a great development and testing network for Ethereum. So you can try to create your own contract based on our sdk right now in a testing network environment.
 
-Following the Ethereum part of developers guild is a great way to understand how to use our sdk to fetch external data from smart contract.
+Following **the Ethereum part of developers guild** is a great way to understand how to use our sdk to fetch external data from smart contract.

@@ -1,6 +1,5 @@
 * **Overview**
   * [Home](contents/homepage.md)
-  * [Concepts](contents/concepts.md)
   * [Architecture](contents/architecture.md)
 * **Developers**
   * **Supported Chains**

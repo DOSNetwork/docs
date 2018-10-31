@@ -132,7 +132,7 @@ function __callback__(uint requestId, uint generatedRandom)
 
 
 
-## Deployed Contracts on Rinkeby testnet
+## Deployed Contracts on testnet
 * [DOSAddressBridge]() - A connector contains all system contratcs' addresses, simply for *upgradable* contract development pattern. *(Neither developers nor node runners need to worry about this contract.)*
 * [DOSOnChainSDK]() - APIs smart contract developers can take advantage of to request external off-chain data and leverage off-chain verifiable computation power for computation-intensive tasks. **(Developers need to pay attention to this one and see below section for details.)**
 * [DOSProxy]() - Conceals implementation details such as request handling, random group selection, threshold signature verification, user-defined callback function invocation, response parsing, etc. *(Neither developers nor node runners need to worry about this contract.)*
@@ -140,19 +140,8 @@ function __callback__(uint requestId, uint generatedRandom)
 * [DOSRegistry]() - To be released in Beta **(Node runners need to pay attention to this one and see below section for details.)** 
 
 
-## Security deposit and payment
-In Beta
 
-## Node registry
-In Beta
-
-## Acquire Testnet DOS Tokens
-In Beta.
-
-
-
-## More
-#### Examples
+## More examples
 - **Example 1**: `Query` latest ETH-USD price from Coinbase. Try this gist on [remix](http://remix.ethereum.org/#gist=f39845c47564c9ff98085749bd542d44&optimize=false&version=soljson-v0.4.25+commit.59dbf8f1.js). This example is also [deployed]() on rinkeby testnet.
 ```solidity
   pragma solidity ^0.4.24;
@@ -170,7 +159,7 @@ In Beta.
       string public price_str;
       ethusd public prices;
 
-      function check() private {
+      function check() public {
           queryId = DOSQuery(30, "https://api.coinbase.com/v2/prices/ETH-USD/spot", "$.data.amount");
       }
 
@@ -284,7 +273,18 @@ In Beta.
 ```
 
 
-#### Selector
+## Security deposit and payment
+In Beta
+
+## Node registry
+In Beta
+
+## Acquire Testnet DOS Tokens
+In Beta.
+
+
+## Appendix
+### Selector
 The selector expression is following [JSONPath](https://www.npmjs.com/package/jsonpath) and [XPath](https://en.wikipedia.org/wiki/XPath) rules to filter components from responses.
 ##### Json example and selector expression:
 ```js

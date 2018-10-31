@@ -79,7 +79,9 @@ function __callback__(uint queryId, bytes result) external {
 
 
 ### Requesting for secure and unpredictable random numbers:
-- Randomness is particularly important for many Dapps and games, however, it's impossible to generate a secure and unpredictable random number in pure deterministic environment: ![peter\_szilagyi](../../_media/random.png)
+- Randomness is particularly important for many Dapps and games, however, it's impossible to generate a secure and unpredictable random number in pure deterministic environment:
+<center>![peter\_szilagyi](../../_media/random.png ':size=500x250')</center>
+
 - DOS Network is providing a provably secure, unstoppable and unpreditable random source for on-chain smart contracts to use. For technical details and cryptographic proofs please check our [whitepaper]().
 
 <!-- tabs:start -->
@@ -142,7 +144,7 @@ function __callback__(uint requestId, uint generatedRandom)
 
 
 ## More examples
-- **Example 1**: `Query` latest ETH-USD price from Coinbase. Try this gist on [remix](http://remix.ethereum.org/#gist=f39845c47564c9ff98085749bd542d44&optimize=false&version=soljson-v0.4.25+commit.59dbf8f1.js). This example is also [deployed]() on rinkeby testnet.
+- **Example 1**: `Query` latest ETH-USD price from Coinbase.
 ```solidity
   pragma solidity ^0.4.24;
 
@@ -181,7 +183,11 @@ function __callback__(uint requestId, uint generatedRandom)
       }
   }
 ```
-- **Example 2**: A `SimpleDice` game with no house edge based on secure and unpredictable random number generation. Try it out on [remix](http://remix.ethereum.org/#gist=3b2ca0410af407497bdc70ffe79ee123&optimize=false&version=soljson-v0.4.25+commit.59dbf8f1.js). This example is also [deployed]() on rinkeby testnet.
+Try this gist on [remix](http://remix.ethereum.org/#gist=f39845c47564c9ff98085749bd542d44&optimize=false&version=soljson-v0.4.25+commit.59dbf8f1.js). The example is also [deployed]() on rinkeby testnet.
+<div></div>
+<center>![remix](../../_media/remix.png ':size=600x400')</center>
+
+- **Example 2**: A `SimpleDice` game with no house edge based on secure and unpredictable random number generation.
 ```solidity
   pragma solidity ^0.4.24;
 
@@ -271,6 +277,7 @@ function __callback__(uint requestId, uint generatedRandom)
       }
   }
 ```
+Try this gist out on [remix](http://remix.ethereum.org/#gist=3b2ca0410af407497bdc70ffe79ee123&optimize=false&version=soljson-v0.4.25+commit.59dbf8f1.js). The example is also [deployed]() on rinkeby testnet.
 
 
 ## Security deposit and payment

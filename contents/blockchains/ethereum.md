@@ -7,7 +7,7 @@ Several APIs are released in the Alpha version that are useful to developers.
 - Example usage:
 
 <!-- tabs:start -->
-#### **DOSQuery() API **
+#### **DOSQuery() API**
 `function DOSQuery(uint timeout, string dataSource, string selector) returns (uint)`:
 - `timeout`: An estimated timeout in seconds specified by the caller, e.g. `30`. Response is not guaranteed if client side processing time exceeds this value.
 - `dataSource`: Path to the data source specified by caller.
@@ -47,6 +47,37 @@ function __callback__(uint queryId, bytes result) external {
 ```
 <!-- tabs:end -->
 
+- `DOSOnChainSDK` also provides built-in utility functions for developers to easily process `string / bytes`: 
+```solidity
+  library utils {
+      function subStr(string a, uint start, uint len) internal pure returns(string);
+      function subStr(string a, uint start) internal pure returns(string);
+      function subStr(bytes a, uint start, uint len) internal pure returns(bytes);
+      function subStr(bytes a, uint start) internal pure returns(bytes);
+      function indexOf(string haystack, string needle) internal pure returns(int);
+      function indexOf(bytes haystack, bytes needle) internal pure returns(int);
+      function strConcat(string a, string b) internal pure returns(string);
+      function bytesConcat(bytes a, bytes b) internal pure returns(bytes);
+      function strCompare(string a, string b) internal pure returns(int);
+      function bytesCompare(bytes a, bytes b) internal pure returns(int);
+      function strEqual(string a, string b) internal pure returns(bool);
+      function bytesEqual(bytes a, bytes b) internal pure returns(bool);
+
+      function uint2Str(uint x) internal pure returns(string);
+      function uint2HexStr(uint x) internal pure returns(string);
+      function addr2Str(address x) internal pure returns(string);
+      function str2Addr(string a) internal pure returns(address);
+      function str2Uint(string a) internal pure returns(uint);
+      function hexStr2Uint(string a) internal pure returns(uint);
+      function byte2Uint(byte b) internal pure returns(uint);
+      function hexByte2Uint(byte b) internal pure returns(uint);
+  }
+
+  contract DOSOnChainSDK {
+      using utils for *;
+      // ...
+  }
+```
 
 
 ### Requesting for secure and unpredictable random numbers:

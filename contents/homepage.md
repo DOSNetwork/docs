@@ -1,14 +1,16 @@
 ## DOS NETWORK
-> Decentralized Oracle Service making smart contracts usable with off-chain data and computation.
+> DOS NETWORK is a layer 2 chain-agnostic **D**ecentralized **O**racle **S**ervice network, providing real-time data feed oracle and computation oracle solution to mainstream blockchains.
+> DOS NETWORK boost blockchain usability with real world data and computation power.
 
-## What it is
+## Introducation
 
 
 ## Features
  
 
+## Progress
+
+
 ## Use Cases
 
-
-## Community
 

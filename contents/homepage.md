@@ -22,6 +22,6 @@ In the high level DOS Network consist of two parts: on-chain smart contract part
 ## Recent update
 We've just released **alpha version** of the data feed oracle on Ethereum rinkeby testnet, which currently is a private network consisting of a group of 21 nodes with alpha functionalities including VRF, threshold group signature, on-chain group signature verification, json and xml/html response parsing, data query and secure random number generation and so on.
 
-Please check [developers guide](../contents/blockchains/ethereum) and examples to start using our on-chain SDK to fetch external data and request secure random numbers within your smart contracts, and stay tuned for more updates and future releases.
+Please check [developers guide](contents/blockchains/ethereum) and examples to start using our on-chain SDK to fetch external data and request secure random numbers within your smart contracts, and stay tuned for more updates and future releases.
 
 Also join our [telegram channel](https://t.me/dosnetwork_en) to communicate with the team and community members directly!

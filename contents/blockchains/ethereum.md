@@ -187,21 +187,22 @@ Try this gist on [remix](http://remix.ethereum.org/#gist=f39845c47564c9ff9808574
 <div></div>
 <center>![remix](../../_media/remix.png ':size=600x400')</center>
 
+
 - **Example 2**: A `SimpleDice` game with no house edge based on secure and unpredictable random number generation.
 ```solidity
   pragma solidity ^0.4.24;
 
-  import "./Ownable.sol";
   import "./DOSOnChainSDK.sol";
 
-  contract SimpleDice is Ownable, DOSOnChainSDK {
-      address public devAddress = 0x1738A04F8942489E68d39409bA9C5c7864C2D754;
+  contract SimpleDice is DOSOnChainSDK {
+      address public devAddress = 0xe4E18A49c6F1210FFE9a60dBD38071c6ef78d982;
+      uint public devContributed = 0;
       // 1% winning payout goes to developer account
       uint public developCut = 1;
       // precise to 4 digits after decimal point.
       uint public decimal = 4;
       // gameId => gameInfo
-      mapping(uint => DiceInfo) games;
+      mapping(uint => DiceInfo) public games;
 
       struct DiceInfo {
           uint rollUnder;  // betted number, player wins if random < rollUnder
@@ -215,8 +216,8 @@ Try this gist on [remix](http://remix.ethereum.org/#gist=f39845c47564c9ff9808574
           uint weiBetted,
           address better
       );
-      event PlayerWin(uint generated, uint betted, uint amountWin);
-      event PlayerLose(uint generated, uint betted);
+      event PlayerWin(uint gameId, uint generated, uint betted, uint amountWin);
+      event PlayerLose(uint gameId, uint generated, uint betted);
 
       modifier auth {
           // Filter out malicious __callback__ callers.
@@ -224,18 +225,34 @@ Try this gist on [remix](http://remix.ethereum.org/#gist=f39845c47564c9ff9808574
           _;
       }
 
+      modifier onlyDev {
+          require(msg.sender == devAddress);
+          _;
+      }
+
+      function min(uint a, uint b) internal pure returns(uint) {
+          return a < b ? a : b;
+      }
+      // Only receive bankroll funding from developer.
+      function() public payable onlyDev {
+          devContributed += msg.value;
+      }
+      // Only developer can withdraw the amount up to what he has contributed.
+      function devWithdrawal() public onlyDev {
+          uint withdrawalAmount = min(address(this).balance, devContributed);
+          devContributed = 0;
+          devAddress.transfer(withdrawalAmount);
+      }
+
       // 100 / (rollUnder - 1) * (1 - 0.01) => 99 / (rollUnder - 1)
-      // Not using SafeMath as this function cannot overflow in this contract's
-      // context anyway.
+      // Not using SafeMath as this function cannot overflow anyway.
       function computeWinPayout(uint rollUnder) public view returns(uint) {
           return 99 * (10 ** decimal) / (rollUnder - 1);
       }
+
       // 100 / (rollUnder - 1) * 0.01
       function computeDeveloperCut(uint rollUnder) public view returns(uint) {
           return 10 ** decimal / (rollUnder - 1);
-      }
-      function computeTotalWinPayout(uint rollUnder) public view returns(uint) {
-          return 100 * (10 ** decimal) / (rollUnder - 1);
       }
 
       function play(uint rollUnder) public payable {
@@ -244,7 +261,7 @@ Try this gist on [remix](http://remix.ethereum.org/#gist=f39845c47564c9ff9808574
           // Make sure contract has enough balance to cover payouts before game.
           // Not using SafeMath as I'm not expecting this demo contract's
           // balance to be very large.
-          require(address(this).balance * (10 ** decimal) >= msg.value * (computeTotalWinPayout(rollUnder)),
+          require(address(this).balance * (10 ** decimal) >= msg.value * computeWinPayout(rollUnder),
                   "Game contract doesn't have enough balance, decrease rollUnder");
 
           // Request a safe, unmanipulatable random number from DOS Network with
@@ -270,17 +287,17 @@ Try this gist on [remix](http://remix.ethereum.org/#gist=f39845c47564c9ff9808574
               uint payout = betted * computeWinPayout(rollUnder) / (10 ** decimal);
               uint devPayout = betted * computeDeveloperCut(rollUnder) / (10 ** decimal);
 
-              emit PlayerWin(gen_rnd, rollUnder, payout);
+              emit PlayerWin(requestId, gen_rnd, rollUnder, payout);
               player.transfer(payout);
               devAddress.transfer(devPayout);
           } else {
               // Lose
-              emit PlayerLose(gen_rnd, rollUnder);
+              emit PlayerLose(requestId, gen_rnd, rollUnder);
           }
       }
   }
 ```
-Try this gist out on [remix](http://remix.ethereum.org/#gist=3b2ca0410af407497bdc70ffe79ee123&optimize=false&version=soljson-v0.4.25+commit.59dbf8f1.js). The example is also [deployed]() on rinkeby testnet.
+Try this gist out on [remix](http://remix.ethereum.org/#gist=3b2ca0410af407497bdc70ffe79ee123&optimize=false&version=soljson-v0.4.25+commit.59dbf8f1.js). The example is also [deployed](https://rinkeby.etherscan.io/address/0x0bbd2256f1710a55d8070b1c3c063cc46f889ffd) on rinkeby testnet.
 
 
 ## Security deposit and payment

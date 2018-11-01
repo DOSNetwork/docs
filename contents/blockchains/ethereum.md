@@ -135,11 +135,11 @@ function __callback__(uint requestId, uint generatedRandom)
 
 
 ## Deployed Contracts on testnet
-* [DOSAddressBridge]() - A connector contains all system contratcs' addresses, simply for *upgradable* contract development pattern. *(Neither developers nor node runners need to worry about this contract.)*
-* [DOSOnChainSDK]() - APIs smart contract developers can take advantage of to request external off-chain data and leverage off-chain verifiable computation power for computation-intensive tasks. **(Developers need to pay attention to this one and see below section for details.)**
-* [DOSProxy]() - Conceals implementation details such as request handling, random group selection, threshold signature verification, user-defined callback function invocation, response parsing, etc. *(Neither developers nor node runners need to worry about this contract.)*
-* [DOSPayment]() - To be released in Beta **(Node runners need to pay attention to this one and see below section for details.)** 
-* [DOSRegistry]() - To be released in Beta **(Node runners need to pay attention to this one and see below section for details.)** 
+* [DOSOnChainSDK](https://rinkeby.etherscan.io/address/0xb20be4f55aca452a60b8812f051c39c302161be7) - A contract SDK that smart contract inherits from in order to request external off-chain data and leverage off-chain verifiable computation power for computation-intensive tasks. **(Developers need to pay attention to this one and see below section for details.)**
+* [DOSAddressBridge](https://rinkeby.etherscan.io/address/0xe987926a226932dfb1f71fa316461db272e05317) - A connector contains all system contratcs' addresses, simply for *upgradable* contract development pattern. *(Neither developers nor node runners need to worry about this contract.)*
+* [DOSProxy](https://rinkeby.etherscan.io/address/0x1882d681b01e13F2CB3A5b1F8c05496EC02Ea035) - Conceals implementation details such as request handling, random group selection, threshold signature verification, user-defined callback function invocation, response parsing, etc. *(Neither developers nor node runners need to worry about this contract.)*
+* [DOSPayment](#) - To be released in Beta **(Node runners need to pay attention to this one and see below section for details.)**
+* [DOSRegistry](#) - To be released in Beta **(Node runners need to pay attention to this one and see below section for details.)**
 
 
 
@@ -175,7 +175,7 @@ function __callback__(uint requestId, uint generatedRandom)
           require(queryId == id, "Unmatched response");
 
           price_str = string(result);
-          prices.integral = price_str.str2Uint();
+          prices.integral = price_str.subStr(1).str2Uint();
           int delimit_idx = price_str.indexOf('.');
           if (delimit_idx != -1) {
               prices.fractional = price_str.subStr(uint(delimit_idx + 1)).str2Uint();
@@ -183,7 +183,7 @@ function __callback__(uint requestId, uint generatedRandom)
       }
   }
 ```
-Try this gist on [remix](http://remix.ethereum.org/#gist=f39845c47564c9ff98085749bd542d44&optimize=false&version=soljson-v0.4.25+commit.59dbf8f1.js). The example is also [deployed]() on rinkeby testnet.
+Try this gist on [remix](http://remix.ethereum.org/#gist=f39845c47564c9ff98085749bd542d44&optimize=false&version=soljson-v0.4.25+commit.59dbf8f1.js). The example is also [deployed](https://rinkeby.etherscan.io/address/0xf7fbe8467dc230316e04bbe00c5c811a18886a7e) on rinkeby testnet.
 <div></div>
 <center>![remix](../../_media/remix.png ':size=600x400')</center>
 

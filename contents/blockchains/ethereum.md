@@ -135,7 +135,7 @@ function __callback__(uint requestId, uint generatedRandom)
 
 
 ## Deployed Contracts on testnet
-* [DOSOnChainSDK](https://rinkeby.etherscan.io/address/0xb20be4f55aca452a60b8812f051c39c302161be7) - A contract SDK that smart contract inherits from in order to request external off-chain data and leverage off-chain verifiable computation power for computation-intensive tasks. **(Developers need to pay attention to this one and see below section for details.)**
+* [DOSOnChainSDK](https://rinkeby.etherscan.io/address/0xb20be4f55aca452a60b8812f051c39c302161be7) - A contract SDK that developers inherit from to request external off-chain data / secure verifiable randomness and leverage off-chain verifiable computation power for computation-intensive tasks. **(Developers need to pay attention to this one and see below section for details.)**
 * [DOSAddressBridge](https://rinkeby.etherscan.io/address/0xe987926a226932dfb1f71fa316461db272e05317) - A connector contains all system contratcs' addresses, simply for *upgradable* contract development pattern. *(Neither developers nor node runners need to worry about this contract.)*
 * [DOSProxy](https://rinkeby.etherscan.io/address/0x1882d681b01e13F2CB3A5b1F8c05496EC02Ea035) - Conceals implementation details such as request handling, random group selection, threshold signature verification, user-defined callback function invocation, response parsing, etc. *(Neither developers nor node runners need to worry about this contract.)*
 * [DOSPayment](#) - To be released in Beta **(Node runners need to pay attention to this one and see below section for details.)**
@@ -144,7 +144,7 @@ function __callback__(uint requestId, uint generatedRandom)
 
 
 ## More examples
-- **Example 1**: `Query` latest ETH-USD price from Coinbase.
+- **Example 1**: `DOSQuery()` to get latest ETH-USD price from Coinbase.
 ```solidity
   pragma solidity ^0.4.24;
 
@@ -188,7 +188,7 @@ Try this gist on [remix](http://remix.ethereum.org/#gist=f39845c47564c9ff9808574
 <center>![remix](../../_media/remix.png ':size=600x400')</center>
 
 
-- **Example 2**: A `SimpleDice` game with no house edge based on secure and unpredictable random number generation.
+- **Example 2**: A `SimpleDice` game with no insider trading or house edge, based on smart contract plus secure and unpredictable random number generated through `DOSRandom()`.
 ```solidity
   pragma solidity ^0.4.24;
 

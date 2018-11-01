@@ -225,14 +225,17 @@ Try this gist on [remix](http://remix.ethereum.org/#gist=f39845c47564c9ff9808574
       }
 
       // 100 / (rollUnder - 1) * (1 - 0.01) => 99 / (rollUnder - 1)
-      // Not using SafeMath as this function cannot overflow anyway.
+      // Not using SafeMath as this function cannot overflow in this contract's
+      // context anyway.
       function computeWinPayout(uint rollUnder) public view returns(uint) {
           return 99 * (10 ** decimal) / (rollUnder - 1);
       }
-
       // 100 / (rollUnder - 1) * 0.01
       function computeDeveloperCut(uint rollUnder) public view returns(uint) {
           return 10 ** decimal / (rollUnder - 1);
+      }
+      function computeTotalWinPayout(uint rollUnder) public view returns(uint) {
+          return 100 * (10 ** decimal) / (rollUnder - 1);
       }
 
       function play(uint rollUnder) public payable {
@@ -241,7 +244,7 @@ Try this gist on [remix](http://remix.ethereum.org/#gist=f39845c47564c9ff9808574
           // Make sure contract has enough balance to cover payouts before game.
           // Not using SafeMath as I'm not expecting this demo contract's
           // balance to be very large.
-          require(address(this).balance * (10 ** decimal) >= msg.value * computeWinPayout(rollUnder),
+          require(address(this).balance * (10 ** decimal) >= msg.value * (computeTotalWinPayout(rollUnder)),
                   "Game contract doesn't have enough balance, decrease rollUnder");
 
           // Request a safe, unmanipulatable random number from DOS Network with

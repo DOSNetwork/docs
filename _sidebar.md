@@ -1,5 +1,4 @@
-* **Overview**
-  * [Home](contents/homepage.md)
+* [Home](contents/homepage.md)
 * **Developers**
   * **Supported Chains**
     * [Ethereum](contents/blockchains/ethereum.md)

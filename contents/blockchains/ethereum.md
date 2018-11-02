@@ -82,7 +82,7 @@ function __callback__(uint queryId, bytes result) external {
 - Randomness is particularly important for many Dapps and games, however, it's impossible to generate a secure and unpredictable random number in pure deterministic environment:
 <center>![peter\_szilagyi](../../_media/random.png ':size=500x250')</center>
 
-- DOS Network is providing a provably secure, unstoppable and unpreditable random source for on-chain smart contracts to use. For technical details and cryptographic proofs please check our [whitepaper]().
+- DOS Network is providing a provably secure, unstoppable and unpreditable random source for on-chain smart contracts to use. For technical details and cryptographic proofs please check our [whitepaper](#).
 
 <!-- tabs:start -->
 
@@ -161,6 +161,8 @@ function __callback__(uint requestId, uint generatedRandom)
       string public price_str;
       ethusd public prices;
 
+      event GetPrice(uint integral, uint fractional);
+
       function check() public {
           queryId = DOSQuery(30, "https://api.coinbase.com/v2/prices/ETH-USD/spot", "$.data.amount");
       }
@@ -180,6 +182,7 @@ function __callback__(uint requestId, uint generatedRandom)
           if (delimit_idx != -1) {
               prices.fractional = price_str.subStr(uint(delimit_idx + 1)).str2Uint();
           }
+          emit GetPrice(prices.integral, prices.fractional);
       }
   }
 ```

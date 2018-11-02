@@ -25,7 +25,7 @@ contract Example is Ownable, DOSOnChainSDK {
 }
 ```
 
-#### **\_\_callback\_\_() API**
+#### **__callback__() API**
 <p>Note that the caller must override `__callback__` function to receive and process the response. A user-defined event may be added to notify the Dapp frontend that the response is ready.</p>
 `function __callback__(uint queryId, bytes result) external`:
 - `queryId`: A unique `queryId` returned by `DOSQuery()` to differenciate parallel responses.
@@ -101,7 +101,7 @@ function requestSafeRandom() public {
 }
 ```
 
-#### **\_\_callback\_\_() API**
+#### **__callback__() API**
 `function __callback__(uint requestId, uint generatedRandom) external`:
 - `requestId`: A unique `requestId` returned by `DOSRandom()` to process parallelly generated random numbers.
 - `generatedRandom`: Generated secure random number for the specific `requestId`.

@@ -8,7 +8,7 @@
 * :heavy_check_mark: Scalable and provably secure with low cost
 * :heavy_check_mark: Compatible to heterogeneous blockchains
 
-[Getting Started](contents/homepage)
+[Getting Started](homepage)
 
 <!-- background image -->
 ![](linear-gradient(to left bottom, hsl(99, 100%, 85%) 0%, hsl(40, 100%, 85%) 100%))

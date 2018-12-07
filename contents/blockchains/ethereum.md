@@ -137,7 +137,7 @@ function __callback__(uint requestId, uint generatedRandom)
 ## Deployed Contracts on testnet
 * [DOSOnChainSDK](https://rinkeby.etherscan.io/address/0xb20be4f55aca452a60b8812f051c39c302161be7) - A contract SDK that developers inherit from to request external off-chain data / secure verifiable randomness and leverage off-chain verifiable computation power for computation-intensive tasks. **(Developers need to pay attention to this one and see below section for details.)**
 * [DOSAddressBridge](https://rinkeby.etherscan.io/address/0xe987926a226932dfb1f71fa316461db272e05317) - A connector contains all system contratcs' addresses, simply for *upgradable* contract development pattern. *(Neither developers nor node runners need to worry about this contract.)*
-* [DOSProxy](https://rinkeby.etherscan.io/address/0x1882d681b01e13F2CB3A5b1F8c05496EC02Ea035) - Conceals implementation details such as request handling, random group selection, threshold signature verification, user-defined callback function invocation, response parsing, etc. *(Neither developers nor node runners need to worry about this contract.)*
+* [DOSProxy](https://rinkeby.etherscan.io/address/0x13a59BA5Aaa130482Ec11D9e4ba8bb688b1c38a4) - Conceals implementation details such as request handling, random group selection, threshold signature verification, user-defined callback function invocation, response parsing, etc. *(Neither developers nor node runners need to worry about this contract.)*
 * [DOSPayment](#) - To be released in Beta **(Node runners need to pay attention to this one and see below section for details.)**
 * [DOSRegistry](#) - To be released in Beta **(Node runners need to pay attention to this one and see below section for details.)**
 

@@ -151,7 +151,7 @@ function __callback__(uint requestId, uint generatedRandom)
 ## More examples
 - **Example 1**: `DOSQuery()` to get latest ETH-USD price from Coinbase.
 ```solidity
-  pragma solidity ^0.4.24;
+  pragma solidity ^0.5.0;
 
   import "./Ownable.sol";
   import "./DOSOnChainSDK.sol";
@@ -178,7 +178,7 @@ function __callback__(uint requestId, uint generatedRandom)
           _;
       }
 
-      function __callback__(uint id, bytes result) external auth {
+      function __callback__(uint id, bytes calldata result) external auth {
           require(queryId == id, "Unmatched response");
 
           price_str = string(result);
@@ -191,19 +191,19 @@ function __callback__(uint requestId, uint generatedRandom)
       }
   }
 ```
-Try this gist on [remix](http://remix.ethereum.org/#gist=f39845c47564c9ff98085749bd542d44&optimize=false&version=soljson-v0.4.25+commit.59dbf8f1.js). The example is also [deployed](https://rinkeby.etherscan.io/address/0xf7fbe8467dc230316e04bbe00c5c811a18886a7e) on rinkeby testnet.
+Try this gist on [remix](http://remix.ethereum.org/#gist=f39845c47564c9ff98085749bd542d44&optimize=true&version=soljson-v0.5.8+commit.23d335f2.js). The example is also [deployed](https://rinkeby.etherscan.io/address/0xfa730447d7f5954e68e05aa77fa3769609ff4b3a) on rinkeby testnet.
 <div></div>
 <center>![remix](../../_media/remix.png ':size=600x400')</center>
 
 
 - **Example 2**: A `SimpleDice` game with no insider trading or house edge, based on smart contract plus secure and unpredictable random number generated through `DOSRandom()`.
 ```solidity
-  pragma solidity ^0.4.24;
+  pragma solidity ^0.5.0;
 
   import "./DOSOnChainSDK.sol";
 
   contract SimpleDice is DOSOnChainSDK {
-      address public devAddress = 0xe4E18A49c6F1210FFE9a60dBD38071c6ef78d982;
+      address payable public devAddress = 0xE222f441cb42bCFE8E46Fdecad0e633C70246BD3;
       uint public devContributed = 0;
       // 1% winning payout goes to developer account
       uint public developCut = 1;
@@ -215,7 +215,7 @@ Try this gist on [remix](http://remix.ethereum.org/#gist=f39845c47564c9ff9808574
       struct DiceInfo {
           uint rollUnder;  // betted number, player wins if random < rollUnder
           uint amountBet;  // amount in wei
-          address player;  // better address
+          address payable player;  // better address
       }
 
       event ReceivedBet(
@@ -242,7 +242,7 @@ Try this gist on [remix](http://remix.ethereum.org/#gist=f39845c47564c9ff9808574
           return a < b ? a : b;
       }
       // Only receive bankroll funding from developer.
-      function() public payable onlyDev {
+      function() external payable onlyDev {
           devContributed += msg.value;
       }
       // Only developer can withdraw the amount up to what he has contributed.
@@ -282,7 +282,7 @@ Try this gist on [remix](http://remix.ethereum.org/#gist=f39845c47564c9ff9808574
       }
 
       function __callback__(uint requestId, uint generatedRandom) external auth {
-          address player = games[requestId].player;
+          address payable player = games[requestId].player;
           require(player != address(0x0));
 
           uint gen_rnd = generatedRandom % 100 + 1;
@@ -305,7 +305,7 @@ Try this gist on [remix](http://remix.ethereum.org/#gist=f39845c47564c9ff9808574
       }
   }
 ```
-Try this gist out on [remix](http://remix.ethereum.org/#gist=3b2ca0410af407497bdc70ffe79ee123&optimize=false&version=soljson-v0.4.25+commit.59dbf8f1.js). The example is also [deployed](https://rinkeby.etherscan.io/address/0x0bbd2256f1710a55d8070b1c3c063cc46f889ffd) on rinkeby testnet.
+Try this gist out on [remix](http://remix.ethereum.org/#gist=3b2ca0410af407497bdc70ffe79ee123&optimize=true&version=soljson-v0.5.8+commit.23d335f2.js). The example is also [deployed](https://rinkeby.etherscan.io/address/0x5a14414642e464ac13374cd220418b7ec5161399) on rinkeby testnet.
 
 
 ## Acquire Testnet DOS Tokens

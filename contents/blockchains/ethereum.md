@@ -135,10 +135,15 @@ function __callback__(uint requestId, uint generatedRandom)
 
 
 ## Deployed Contracts on testnet
-* [DOSOnChainSDK](https://rinkeby.etherscan.io/address/0xb20be4f55aca452a60b8812f051c39c302161be7) - A contract SDK that developers inherit from to request external off-chain data / secure verifiable randomness and leverage off-chain verifiable computation power for computation-intensive tasks. **(Developers need to pay attention to this one and see below section for details.)**
-* [DOSAddressBridge](https://rinkeby.etherscan.io/address/0xe987926a226932dfb1f71fa316461db272e05317) - A connector contains all system contratcs' addresses, simply for *upgradable* contract development pattern. *(Neither developers nor node runners need to worry about this contract.)*
-* [DOSProxy](https://rinkeby.etherscan.io/address/0x1882d681b01e13F2CB3A5b1F8c05496EC02Ea035) - Conceals implementation details such as request handling, random group selection, threshold signature verification, user-defined callback function invocation, response parsing, etc. *(Neither developers nor node runners need to worry about this contract.)*
-* [DOSPayment](#) - To be released in Beta **(Node runners need to pay attention to this one and see below section for details.)**
+* [DOSOnChainSDK](https://rinkeby.etherscan.io/address/0xAcd3Cb533d1bc21e9f300D86E8F47BE274569b50) - A contract SDK that developers inherit from to request external off-chain data / secure verifiable randomness and leverage off-chain verifiable computation power for computation-intensive tasks. **(Developers need to pay attention to this one and see below section for details.)**
+* [DOSAddressBridge](https://rinkeby.etherscan.io/address/0xf0CEFfc4209e38EA3Cd1926DDc2bC641cbFFd1cF) - A connector contains all system contratcs' addresses, simply for *upgradable* contract development pattern. *(Neither developers nor node runners need to worry about this contract.)*
+* [DOSProxy](https://rinkeby.etherscan.io/address/0x7fD667a87E2ef724f19315124755558cAA18836E) - Conceals implementation details such as request handling, random group selection, threshold signature verification, user-defined callback function invocation, response parsing, etc. *(Neither developers nor node runners need to worry about this contract.)*
+* [CommitReveal](https://rinkeby.etherscan.io/address/0xbDD6c1796d3cB3F8f2E66efdc53616E98684c893) - Conceals implementation details of [commit-reveal scheme](https://en.wikipedia.org/wiki/Commitment_scheme), which is used to generate a secure and unpredictable genesis random number by multiparties in every bootstrap phase. *(Neither developers nor node runners need to worry about this contract.)*
+* [DOSPayment](https://rinkeby.etherscan.io/address/0x068B1722Fb3E6a51eA3F1E5BCD83e20577aaD73C) - Conseals implementation details of oracle request payment schemes and other node runners' validity judgement. Under implementation and improvement. *(Node runners only need to get 50K testnet tokens or several testnet DropBurn tokens. See below for details.)*
+* [Staking and Delegation Contract](#) - Under design and implementation. Both eligible node runners and normal token holders are able to earn staking rewards:
+  - Node runners earn staking rewards by staking at least 50K tokens (or lessen a bit by owning [DropBurn](https://medium.com/dos-network/introducing-dropburn-a-new-model-to-bootstrap-staking-network-3b2c605dd276) token) themselves and join the network to provide oracle services.
+  - Normal token holders earn staking rewards by delegating to eligible nodes, they may need to pay a percentage of earned rewards to delegated nodes.
+  - A user-friendly frontend will be provided to help node runners and token holders to stake, delegate, withdraw rewards, register a node, etc.
 * [DOSRegistry](#) - To be released in Beta **(Node runners need to pay attention to this one and see below section for details.)**
 
 
@@ -311,14 +316,18 @@ Try this gist on [remix](http://remix.ethereum.org/#gist=f39845c47564c9ff9808574
 Try this gist out on [remix](http://remix.ethereum.org/#gist=3b2ca0410af407497bdc70ffe79ee123&optimize=false&version=soljson-v0.5.16+commit.9c3226ce.js). The example is also [deployed](https://rinkeby.etherscan.io/address/0x46b6a34b5e96519001162140a635ee0895bd284d) on rinkeby testnet.
 
 
-## Security deposit and payment
-In Beta
-
-## Node registry
-In Beta
-
 ## Acquire Testnet DOS Tokens
-In Beta.
+* [Testnet DOS Token](https://rinkeby.etherscan.io/address/0x214e79c85744cd2ebbc64ddc0047131496871bee)
+* Please fill in this [form](https://docs.google.com/forms/d/e/1FAIpQLSe7Kf1RvGa2p5SjP4eGAp-fw2frauOl6CDORnHK0-TNbjho9w/viewform) to request testnet tokens.
+
+
+## Security deposit and payment
+Under design and implementation.
+
+
+## Node registry frontend and network stats scanner
+Under design and implementation.
+
 
 
 ## Appendix

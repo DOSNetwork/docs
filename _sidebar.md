@@ -2,10 +2,6 @@
 * **Developers**
   * **Supported Chains**
     * [Ethereum](contents/blockchains/ethereum.md)
-    * [EOS](contents/blockchains/eos.md)
-    * [Thunder](contents/blockchains/thunder.md)
-    * [Zilliqa](contents/blockchains/zilliqa.md)
-    * [Neo](contents/blockchains/neo.md)
   * [**Tools**](contents/dev_tools.md)
 * **Node Runners**
   * [Download and Deploy](contents/deploy.md)

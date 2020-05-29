@@ -146,161 +146,169 @@ function __callback__(uint requestId, uint generatedRandom)
 ## More examples
 - **Example 1**: `DOSQuery()` to get latest ETH-USD price from Coinbase.
 ```solidity
-  pragma solidity ^0.4.24;
+  pragma solidity ^0.5.0;
 
-  import "./Ownable.sol";
-  import "./DOSOnChainSDK.sol";
+  import "../lib/utils.sol";
+  import "../DOSOnChainSDK.sol";
 
-  contract CoinbaseEthUsd is Ownable, DOSOnChainSDK {
-      // Struct to hold parsed floating string "123.45"
-      struct ethusd {
-          uint integral;
-          uint fractional;
-      }
-      uint queryId;
-      string public price_str;
-      ethusd public prices;
+  // An example get latest ETH-USD price from Coinbase
+  contract CoinbaseEthUsd is DOSOnChainSDK {
+    using utils for *;
 
-      event GetPrice(uint integral, uint fractional);
+    // Struct to hold parsed floating string "123.45"
+    struct ethusd {
+        uint integral;
+        uint fractional;
+    }
+    uint queryId;
+    string public price_str;
+    ethusd public prices;
 
-      function check() public {
-          queryId = DOSQuery(30, "https://api.coinbase.com/v2/prices/ETH-USD/spot", "$.data.amount");
-      }
+    event GetPrice(uint integral, uint fractional);
 
-      modifier auth {
-          // Filter out malicious __callback__ callers.
-          require(msg.sender == fromDOSProxyContract(), "Unauthenticated response");
-          _;
-      }
+    constructor() public {
+        // @dev: setup and then transfer DOS tokens into deployed contract
+        // as oracle fees.
+        // Unused fees can be reclaimed by calling DOSRefund() in the SDK.
+        super.DOSSetup();
+    }
 
-      function __callback__(uint id, bytes result) external auth {
-          require(queryId == id, "Unmatched response");
+    function check() public {
+        queryId = DOSQuery(30, "https://api.coinbase.com/v2/prices/ETH-USD/spot", "$.data.amount");
+    }
 
-          price_str = string(result);
-          prices.integral = price_str.subStr(1).str2Uint();
-          int delimit_idx = price_str.indexOf('.');
-          if (delimit_idx != -1) {
-              prices.fractional = price_str.subStr(uint(delimit_idx + 1)).str2Uint();
-          }
-          emit GetPrice(prices.integral, prices.fractional);
-      }
+    function __callback__(uint id, bytes calldata result) external auth {
+        require(queryId == id, "Unmatched response");
+
+        price_str = string(result);
+        prices.integral = price_str.subStr(1).str2Uint();
+        int delimit_idx = price_str.indexOf('.');
+        if (delimit_idx != -1) {
+            prices.fractional = price_str.subStr(uint(delimit_idx + 1)).str2Uint();
+        }
+        emit GetPrice(prices.integral, prices.fractional);
+    }
   }
 ```
-Try this gist on [remix](http://remix.ethereum.org/#gist=f39845c47564c9ff98085749bd542d44&optimize=false&version=soljson-v0.4.25+commit.59dbf8f1.js). The example is also [deployed](https://rinkeby.etherscan.io/address/0xf7fbe8467dc230316e04bbe00c5c811a18886a7e) on rinkeby testnet.
+Try this gist on [remix](http://remix.ethereum.org/#gist=f39845c47564c9ff98085749bd542d44&optimize=false&version=soljson-v0.5.16+commit.9c3226ce.js). The example is also [deployed](https://rinkeby.etherscan.io/address/0x4608bf4775bc430fae4c72de925035c2bf00197b) on rinkeby testnet.
 <div></div>
 <center>![remix](../../_media/remix.png ':size=600x400')</center>
 
 
 - **Example 2**: A `SimpleDice` game with no insider trading or house edge, based on smart contract plus secure and unpredictable random number generated through `DOSRandom()`.
 ```solidity
-  pragma solidity ^0.4.24;
+  pragma solidity ^0.5.0;
 
   import "./DOSOnChainSDK.sol";
 
   contract SimpleDice is DOSOnChainSDK {
-      address public devAddress = 0xe4E18A49c6F1210FFE9a60dBD38071c6ef78d982;
-      uint public devContributed = 0;
-      // 1% winning payout goes to developer account
-      uint public developCut = 1;
-      // precise to 4 digits after decimal point.
-      uint public decimal = 4;
-      // gameId => gameInfo
-      mapping(uint => DiceInfo) public games;
+    address payable public devAddress;
+    uint public devContributed = 0;
+    // 1% winning payout goes to developer account
+    uint public developCut = 1;
+    // precise to 4 digits after decimal point.
+    uint public decimal = 4;
+    // gameId => gameInfo
+    mapping(uint => DiceInfo) public games;
 
-      struct DiceInfo {
-          uint rollUnder;  // betted number, player wins if random < rollUnder
-          uint amountBet;  // amount in wei
-          address player;  // better address
-      }
+    struct DiceInfo {
+        uint rollUnder;  // betted number, player wins if random < rollUnder
+        uint amountBet;  // amount in wei
+        address payable player;  // better address
+    }
 
-      event ReceivedBet(
-          uint gameId,
-          uint rollUnder,
-          uint weiBetted,
-          address better
-      );
-      event PlayerWin(uint gameId, uint generated, uint betted, uint amountWin);
-      event PlayerLose(uint gameId, uint generated, uint betted);
+    event ReceivedBet(
+        uint gameId,
+        uint rollUnder,
+        uint weiBetted,
+        address better
+    );
+    event PlayerWin(uint gameId, uint generated, uint betted, uint amountWin);
+    event PlayerLose(uint gameId, uint generated, uint betted);
 
-      modifier auth {
-          // Filter out malicious __callback__ callers.
-          require(msg.sender == fromDOSProxyContract(), "Unauthenticated response");
-          _;
-      }
+    modifier onlyDev {
+        require(msg.sender == devAddress);
+        _;
+    }
 
-      modifier onlyDev {
-          require(msg.sender == devAddress);
-          _;
-      }
+    constructor() public {
+        // @dev: setup and then transfer DOS tokens into deployed contract
+        // as oracle fees.
+        // Unused fees can be reclaimed by calling DOSRefund() in the SDK.
+        super.DOSSetup();
+        
+        // Convert address to payable address.
+        devAddress = address(uint160(owner()));
+    }
 
-      function min(uint a, uint b) internal pure returns(uint) {
-          return a < b ? a : b;
-      }
-      // Only receive bankroll funding from developer.
-      function() public payable onlyDev {
-          devContributed += msg.value;
-      }
-      // Only developer can withdraw the amount up to what he has contributed.
-      function devWithdrawal() public onlyDev {
-          uint withdrawalAmount = min(address(this).balance, devContributed);
-          devContributed = 0;
-          devAddress.transfer(withdrawalAmount);
-      }
+    function min(uint a, uint b) internal pure returns(uint) {
+        return a < b ? a : b;
+    }
+    // Only receive bankroll funding from developer.
+    function() external payable onlyDev {
+        devContributed += msg.value;
+    }
+    // Only developer can withdraw the amount up to what he has contributed.
+    function devWithdrawal() public onlyDev {
+        uint withdrawalAmount = min(address(this).balance, devContributed);
+        devContributed = 0;
+        devAddress.transfer(withdrawalAmount);
+    }
 
-      // 100 / (rollUnder - 1) * (1 - 0.01) => 99 / (rollUnder - 1)
-      // Not using SafeMath as this function cannot overflow anyway.
-      function computeWinPayout(uint rollUnder) public view returns(uint) {
-          return 99 * (10 ** decimal) / (rollUnder - 1);
-      }
+    // 100 / (rollUnder - 1) * (1 - 0.01) => 99 / (rollUnder - 1)
+    // Not using SafeMath as this function cannot overflow anyway.
+    function computeWinPayout(uint rollUnder) public view returns(uint) {
+        return 99 * (10 ** decimal) / (rollUnder - 1);
+    }
 
-      // 100 / (rollUnder - 1) * 0.01
-      function computeDeveloperCut(uint rollUnder) public view returns(uint) {
-          return 10 ** decimal / (rollUnder - 1);
-      }
+    // 100 / (rollUnder - 1) * 0.01
+    function computeDeveloperCut(uint rollUnder) public view returns(uint) {
+        return 10 ** decimal / (rollUnder - 1);
+    }
 
-      function play(uint rollUnder) public payable {
-          // winChance within [1%, 95%]
-          require(rollUnder >= 2 && rollUnder <= 96, "rollUnder should be in 2~96");
-          // Make sure contract has enough balance to cover payouts before game.
-          // Not using SafeMath as I'm not expecting this demo contract's
-          // balance to be very large.
-          require(address(this).balance * (10 ** decimal) >= msg.value * computeWinPayout(rollUnder),
-                  "Game contract doesn't have enough balance, decrease rollUnder");
+    function play(uint rollUnder) public payable {
+        // winChance within [1%, 95%]
+        require(rollUnder >= 2 && rollUnder <= 96, "rollUnder should be in 2~96");
+        // Make sure contract has enough balance to cover payouts before game.
+        // Not using SafeMath as I'm not expecting this demo contract's
+        // balance to be very large.
+        require(address(this).balance * (10 ** decimal) >= msg.value * computeWinPayout(rollUnder),
+                "Game contract doesn't have enough balance, decrease rollUnder");
 
-          // Request a safe, unmanipulatable random number from DOS Network with
-          // optional seed.
-          uint gameId = DOSRandom(1, now);
+        // Request a safe, unmanipulatable random number from DOS Network with
+        // optional seed.
+        uint gameId = DOSRandom(now);
 
-          games[gameId] = DiceInfo(rollUnder, msg.value, msg.sender);
-          // Emit event to notify Dapp frontend
-          emit ReceivedBet(gameId, rollUnder, msg.value, msg.sender);
-      }
+        games[gameId] = DiceInfo(rollUnder, msg.value, msg.sender);
+        // Emit event to notify Dapp frontend
+        emit ReceivedBet(gameId, rollUnder, msg.value, msg.sender);
+    }
 
-      function __callback__(uint requestId, uint generatedRandom) external auth {
-          address player = games[requestId].player;
-          require(player != address(0x0));
+    function __callback__(uint requestId, uint generatedRandom) external auth {
+        address payable player = games[requestId].player;
+        require(player != address(0x0));
 
-          uint gen_rnd = generatedRandom % 100 + 1;
-          uint rollUnder = games[requestId].rollUnder;
-          uint betted = games[requestId].amountBet;
-          delete games[requestId];
+        uint gen_rnd = generatedRandom % 100 + 1;
+        uint rollUnder = games[requestId].rollUnder;
+        uint betted = games[requestId].amountBet;
+        delete games[requestId];
 
-          if (gen_rnd < rollUnder) {
-              // Player wins
-              uint payout = betted * computeWinPayout(rollUnder) / (10 ** decimal);
-              uint devPayout = betted * computeDeveloperCut(rollUnder) / (10 ** decimal);
+        if (gen_rnd < rollUnder) {
+            // Player wins
+            uint payout = betted * computeWinPayout(rollUnder) / (10 ** decimal);
+            uint devPayout = betted * computeDeveloperCut(rollUnder) / (10 ** decimal);
 
-              emit PlayerWin(requestId, gen_rnd, rollUnder, payout);
-              player.transfer(payout);
-              devAddress.transfer(devPayout);
-          } else {
-              // Lose
-              emit PlayerLose(requestId, gen_rnd, rollUnder);
-          }
-      }
+            emit PlayerWin(requestId, gen_rnd, rollUnder, payout);
+            player.transfer(payout);
+            devAddress.transfer(devPayout);
+        } else {
+            // Lose
+            emit PlayerLose(requestId, gen_rnd, rollUnder);
+        }
+    }
   }
 ```
-Try this gist out on [remix](http://remix.ethereum.org/#gist=3b2ca0410af407497bdc70ffe79ee123&optimize=false&version=soljson-v0.4.25+commit.59dbf8f1.js). The example is also [deployed](https://rinkeby.etherscan.io/address/0x0bbd2256f1710a55d8070b1c3c063cc46f889ffd) on rinkeby testnet.
+Try this gist out on [remix](http://remix.ethereum.org/#gist=3b2ca0410af407497bdc70ffe79ee123&optimize=false&version=soljson-v0.5.16+commit.9c3226ce.js). The example is also [deployed](https://rinkeby.etherscan.io/address/0x46b6a34b5e96519001162140a635ee0895bd284d) on rinkeby testnet.
 
 
 ## Security deposit and payment

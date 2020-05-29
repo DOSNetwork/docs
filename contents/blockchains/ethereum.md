@@ -11,7 +11,7 @@
 - `dataSource`: Path to the data source specified by caller.
 - `selector`: A `selector expression` provided by caller to filter out specific data fields out of the raw response, with the response data format (json, xml, or more) to be identified from the selector expression. Check the [selector expression](#selector) part for details.
 - Example usage:
-```solidity
+```js
 contract Example is Ownable, DOSOnChainSDK {
     mapping(uint => bool) private _valid_queries;
     ...
@@ -31,7 +31,7 @@ contract Example is Ownable, DOSOnChainSDK {
 - `queryId`: A unique `queryId` returned by `DOSQuery()` to differenciate parallel responses.
 - `result`: Corresponding response in `bytes`.
 - Example usage:
-```solidity
+```js
 function __callback__(uint queryId, bytes result) external {
     // Exclude malicious callback responses.
     require(msg.sender == fromDOSProxyContract());
@@ -46,7 +46,7 @@ function __callback__(uint queryId, bytes result) external {
 <!-- tabs:end -->
 
 - `DOSOnChainSDK` also provides built-in utility functions for developers to easily process `string / bytes`: 
-```solidity
+```js
   library utils {
       function subStr(string a, uint start, uint len) internal pure returns(string);
       function subStr(string a, uint start) internal pure returns(string);
@@ -93,7 +93,7 @@ function __callback__(uint queryId, bytes result) external {
   - `0 (fast mode)`: Return an *insecure* random number directly, which is the sha3 hash of `(last round's secure random number || seed)`. Note that `fast mode` is for testing purpose only and it should NOT be deemed as safe in production usage. It's always free of charge.
 - `seed`: An *optional* random seed provided by caller to get more entropy. The generated random number is secure and unpreditable in safe mode even without providing this `seed`.
 - Example usage:
-```solidity
+```js
 function requestSafeRandom() public {
     uint requestId = DOSRandom(1, now);
     _valid[requestId] = true;
@@ -107,7 +107,7 @@ function requestSafeRandom() public {
 - `generatedRandom`: Generated secure random number for the specific `requestId`.
 - Example usage:
 
-```solidity
+```js
 modifier auth(uint id) {
     // Exclude malicious callback responses.
     require(msg.sender == fromDOSProxyContract(),
@@ -150,11 +150,11 @@ function __callback__(uint requestId, uint generatedRandom)
 
 ## More examples
 - **Example 1**: `DOSQuery()` to get latest ETH-USD price from Coinbase.
-```solidity
+```js
   pragma solidity ^0.5.0;
 
-  import "../lib/utils.sol";
-  import "../DOSOnChainSDK.sol";
+  import "./utils.sol";
+  import "./DOSOnChainSDK.sol";
 
   // An example get latest ETH-USD price from Coinbase
   contract CoinbaseEthUsd is DOSOnChainSDK {
@@ -201,7 +201,7 @@ Try this gist on [remix](http://remix.ethereum.org/#gist=f39845c47564c9ff9808574
 
 
 - **Example 2**: A `SimpleDice` game with no insider trading or house edge, based on smart contract plus secure and unpredictable random number generated through `DOSRandom()`.
-```solidity
+```js
   pragma solidity ^0.5.0;
 
   import "./DOSOnChainSDK.sol";

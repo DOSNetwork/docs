@@ -5,8 +5,9 @@
 - Example usage:
 
 <!-- tabs:start -->
+
 #### **DOSQuery() API**
-`function DOSQuery(uint timeout, string dataSource, string selector) returns (uint)`:
+`function DOSQuery(uint timeout, string memory dataSource, string memory selector)`:
 - `timeout`: An estimated timeout in seconds specified by the caller, e.g. `30`. Response is not guaranteed if client side processing time exceeds this value.
 - `dataSource`: Path to the data source specified by caller.
 - `selector`: A `selector expression` provided by caller to filter out specific data fields out of the raw response, with the response data format (json, xml, or more) to be identified from the selector expression. Check the [selector expression](#selector) part for details.
@@ -15,7 +16,7 @@
 contract Example is Ownable, DOSOnChainSDK {
     mapping(uint => bool) private _valid_queries;
     ...
-    function fetchCoinbaseEthUsd() public onlyOwner {
+    function CoinbaseEthPriceFeed() public {
         // Returns a unique queryId that caller caches for future verification
         uint queryId = DOSQuery(30, "https://api.coinbase.com/v2/prices/ETH-USD/spot", "$.data.amount");
         _valid_queries[queryId] = true;
@@ -26,17 +27,17 @@ contract Example is Ownable, DOSOnChainSDK {
 ```
 
 #### **__callback__() API**
-<p>Note that the caller must override `__callback__` function to receive and process the response. A user-defined event may be added to notify the Dapp frontend that the response is ready.</p>
-`function __callback__(uint queryId, bytes result) external`:
+
+<p>* Note that the caller must override `__callback__` function to receive and process the response. A user-defined event may be added to notify the Dapp frontend that the response is ready.</p>
+
+`function __callback__(uint queryId, bytes calldata result)`:
 - `queryId`: A unique `queryId` returned by `DOSQuery()` to differenciate parallel responses.
 - `result`: Corresponding response in `bytes`.
 - Example usage:
 ```js
-function __callback__(uint queryId, bytes result) external {
-    // Exclude malicious callback responses.
-    require(msg.sender == fromDOSProxyContract());
+function __callback__(uint queryId, bytes calldata result) external auth {
     // Check whether @queryId corresponds to a previous cached one
-    require(_valid_queries[queryId], "Response with invalid queryId!");
+    require(_valid_queries[queryId], "Err-resp-with-invalid-queryId");
 
     // Deal with result
     ...
@@ -87,15 +88,12 @@ function __callback__(uint queryId, bytes result) external {
 <!-- tabs:start -->
 
 #### **DOSRadom() API**
-`function DOSRandom(uint8 mode, uint seed) returns (uint)`:
-- `mode`: Currently we support 2 modes:
-  - `1 (safe mode)`: An asynchronous but safe way to generate a new secure random number using *VRF and Threshold Signature* by a randomly selected group of off-chain clients. The newly generated secure random number is the threshold signature of the collectively signed message `(requestId || last round's secure randomness selecting the group || seed)`. Like queries, `DOSRandom()` returns a unique `requestId` for safe mode and the generated secure random number will be backfilled through the *(overloaded)* `__callback__()` function. There would be a fee to run in safe mode in future mainnet release.
-  - `0 (fast mode)`: Return an *insecure* random number directly, which is the sha3 hash of `(last round's secure random number || seed)`. Note that `fast mode` is for testing purpose only and it should NOT be deemed as safe in production usage. It's always free of charge.
+`function DOSRandom(uint seed) returns (uint)`:
 - `seed`: An *optional* random seed provided by caller to get more entropy. The generated random number is secure and unpreditable in safe mode even without providing this `seed`.
 - Example usage:
 ```js
 function requestSafeRandom() public {
-    uint requestId = DOSRandom(1, now);
+    uint requestId = DOSRandom(now);
     _valid[requestId] = true;
     emit RandomRequested(requestId);
 }
@@ -134,17 +132,20 @@ function __callback__(uint requestId, uint generatedRandom)
 
 
 
-## Deployed Contracts on testnet
-* [DOSOnChainSDK](https://rinkeby.etherscan.io/address/0xAcd3Cb533d1bc21e9f300D86E8F47BE274569b50) - A contract SDK that developers inherit from to request external off-chain data / secure verifiable randomness and leverage off-chain verifiable computation power for computation-intensive tasks. **(Developers need to pay attention to this one and see below section for details.)**
-* [DOSAddressBridge](https://rinkeby.etherscan.io/address/0xf0CEFfc4209e38EA3Cd1926DDc2bC641cbFFd1cF) - A connector contains all system contratcs' addresses, simply for *upgradable* contract development pattern. *(Neither developers nor node runners need to worry about this contract.)*
-* [DOSProxy](https://rinkeby.etherscan.io/address/0x7fD667a87E2ef724f19315124755558cAA18836E) - Conceals implementation details such as request handling, random group selection, threshold signature verification, user-defined callback function invocation, response parsing, etc. *(Neither developers nor node runners need to worry about this contract.)*
-* [CommitReveal](https://rinkeby.etherscan.io/address/0xbDD6c1796d3cB3F8f2E66efdc53616E98684c893) - Conceals implementation details of [commit-reveal scheme](https://en.wikipedia.org/wiki/Commitment_scheme), which is used to generate a secure and unpredictable genesis random number by multiparties in every bootstrap phase. *(Neither developers nor node runners need to worry about this contract.)*
-* [DOSPayment](https://rinkeby.etherscan.io/address/0x068B1722Fb3E6a51eA3F1E5BCD83e20577aaD73C) - Conseals implementation details of oracle request payment schemes and other node runners' validity judgement. Under implementation and improvement. *(Node runners only need to get 50K testnet tokens or several testnet DropBurn tokens. See below for details.)*
-* [Staking and Delegation Contract](#) - Under design and implementation. Both eligible node runners and normal token holders are able to earn staking rewards:
-  - Node runners earn staking rewards by staking at least 50K tokens (or lessen a bit by owning [DropBurn](https://medium.com/dos-network/introducing-dropburn-a-new-model-to-bootstrap-staking-network-3b2c605dd276) token) themselves and join the network to provide oracle services.
+## Deployed Contracts on Mainnet
+We're using [proxy-upgrade pattern](https://blog.openzeppelin.com/proxy-patterns/) for contracts that directly touch money (i.e. `DOSPayment` and `Staking` contract)
+* [DOSAddressBridge](https://etherscan.io/address/0x98a0e7026778840aacd28b9c03137d32e06f5ff1) - Connector that contains all system contratcs' addresses.
+* [CommitReveal](https://etherscan.io/address/0x144ed0555269628049f76da2adbdcdf3aa488e0e) - Conceals details of [commit-reveal scheme](https://en.wikipedia.org/wiki/Commitment_scheme), which is used to generate a secure and unpredictable genesis random number by multiparties in every bootstrap phase.
+* [DOSProxy](https://etherscan.io/address/0x4dd79f907f4D5d8952FEf1eFA0B5d0467c612Cb3) - Conceals details such as request handling, random group selection, threshold signature verification, user-defined callback function invocation, response parsing, etc.
+* `DOSPayment` - Conseals details of oracle request payment schemes and other node runners' validity judgement.
+  - Payment gateway (proxy): https://etherscan.io/address/0xCa316AFC8453598dC3627FD46aE915F9F9407B51
+  - Payment implementation: https://etherscan.io/address/0x5C94E305998e4be76Ba7A1e2d6Cf08c84aFD3Ce8
+* `Staking` - Both eligible node runners and normal token holders (delegators) are able to earn staking rewards:
+  - Node runners earn staking rewards by staking at least 800K tokens (or lessen a bit by owning [DropBurn](https://medium.com/dos-network/introducing-dropburn-a-new-model-to-bootstrap-staking-network-3b2c605dd276) token) themselves and join the network to provide oracle services.
   - Normal token holders earn staking rewards by delegating to eligible nodes, they may need to pay a percentage of earned rewards to delegated nodes.
-  - A user-friendly frontend will be provided to help node runners and token holders to stake, delegate, withdraw rewards, register a node, etc.
-* [DOSRegistry](#) - To be released in Beta **(Node runners need to pay attention to this one and see below section for details.)**
+  - A user-friendly [frontend](https://dashboard.dos.network) is provided to help node runners and token holders to stake, delegate, withdraw rewards, register a node, etc. (Note that running a node )
+  - Staking gateway (proxy): https://etherscan.io/address/0x6D6E2E36367B7175aCaCb75b184bB8DbE9aFE863
+  - Staking implementation: https://etherscan.io/address/0x2F61457Fb685AEae17fCCF3941f74783384f3524
 
 
 

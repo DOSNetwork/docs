@@ -1,7 +1,9 @@
 ## Introduction
 > DOS Network is a layer 2 chain-agnostic **D**ecentralized **O**racle **S**ervice network, providing real-time data feed oracle and computation oracle solution to mainstream blockchains.
 
-<center>![overview](_media/overview.png)</center>
+<p align="center">
+  <img width="460" height="300" src="https://raw.githubusercontent.com/DOSNetwork/docs/master/_media/overview.png">
+</p>
 
 Compared with other centralized or decentralized oracle solutions, DOS Network has many unique features making it the best choice for smart contract and Dapp developers:
 - Fault tolerant and decentralized protocol - there's no single point of failure or downtime to break your Dapps. It's also an open membership network with crypto economy that tolerates malicious nodes and sybil attacks.

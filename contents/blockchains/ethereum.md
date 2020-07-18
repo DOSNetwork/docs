@@ -81,7 +81,9 @@ function __callback__(uint queryId, bytes calldata result) external auth {
 
 ### Requesting for secure and unpredictable random numbers:
 - Randomness is particularly important for many Dapps and games, however, it's impossible to generate a secure and unpredictable random number in pure deterministic environment:
-<center>![peter\_szilagyi](../../_media/random.png ':size=500x250')</center>
+<p align="center">
+  <img width="500" height="250" src="https://raw.githubusercontent.com/DOSNetwork/docs/master/_media/random.png">
+</p>
 
 - DOS Network is providing a provably secure, unstoppable and unpreditable random source for on-chain smart contracts to use. For technical details and cryptographic proofs please check our [whitepaper](#).
 
@@ -141,11 +143,15 @@ We're using [proxy-upgrade pattern](https://blog.openzeppelin.com/proxy-patterns
   - Payment gateway (proxy): https://etherscan.io/address/0xCa316AFC8453598dC3627FD46aE915F9F9407B51
   - Payment implementation: https://etherscan.io/address/0x5C94E305998e4be76Ba7A1e2d6Cf08c84aFD3Ce8
 * `Staking` - Both eligible node runners and normal token holders (delegators) are able to earn staking rewards:
+  - Staking gateway (proxy): https://etherscan.io/address/0x6D6E2E36367B7175aCaCb75b184bB8DbE9aFE863
+  - Staking implementation: https://etherscan.io/address/0x2F61457Fb685AEae17fCCF3941f74783384f3524
   - Node runners earn staking rewards by staking at least 800K tokens (or lessen a bit by owning [DropBurn](https://medium.com/dos-network/introducing-dropburn-a-new-model-to-bootstrap-staking-network-3b2c605dd276) token) themselves and join the network to provide oracle services.
   - Normal token holders earn staking rewards by delegating to eligible nodes, they may need to pay a percentage of earned rewards to delegated nodes.
   - A user-friendly [frontend](https://dashboard.dos.network) is provided to help node runners and token holders to stake, delegate, withdraw rewards, register a node, etc. (Note that running a node )
-  - Staking gateway (proxy): https://etherscan.io/address/0x6D6E2E36367B7175aCaCb75b184bB8DbE9aFE863
-  - Staking implementation: https://etherscan.io/address/0x2F61457Fb685AEae17fCCF3941f74783384f3524
+
+<p align="center">
+  <img width="460" height="300" src="https://raw.githubusercontent.com/DOSNetwork/docs/master/_media/staking.png">
+</p>
 
 
 
@@ -197,8 +203,10 @@ We're using [proxy-upgrade pattern](https://blog.openzeppelin.com/proxy-patterns
   }
 ```
 Try this gist on [remix](http://remix.ethereum.org/#gist=f39845c47564c9ff98085749bd542d44&optimize=false&version=soljson-v0.5.16+commit.9c3226ce.js). The example is also [deployed](https://rinkeby.etherscan.io/address/0x4608bf4775bc430fae4c72de925035c2bf00197b) on rinkeby testnet.
-<div></div>
-<center>![remix](../../_media/remix.png ':size=600x400')</center>
+
+<p align="center">
+  <img width="600" height="400" src="https://raw.githubusercontent.com/DOSNetwork/docs/master/_media/remix.png">
+</p>
 
 
 - **Example 2**: A `SimpleDice` game with no insider trading or house edge, based on smart contract plus secure and unpredictable random number generated through `DOSRandom()`.

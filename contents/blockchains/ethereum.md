@@ -1,4 +1,11 @@
 ## Quick Start
+
+### Setup:
+Developers just need to make their contract inheriting from [DOSOnChainSDK](https://github.com/DOSNetwork/eth-contracts/blob/master/contracts/DOSOnChainSDK.sol) in order to use the oracle services. For each data request or off-chain generated random number request, 50 DOS token is needed (the number may change in future depending on usage cost).
+- ``
+
+
+
 ### Retrieving external data:
 - Smart contract requests for external data by calling `DOSQuery()` function. The whole process is an asynchronous one - i.e. it merely returns a unique `queryId` that caller caches for bookkeeping and future identification, with the real response coming back through the `__callback__()` function.
 - The response data will be backfilled through the `__callback__` function along with corresponding `queryId`. Instead of backfilling the whole raw response we're using [selector expression](#selector) to filter `json` and `xml/html` formated response, developers are able to specify interesting data fields in `DOSQuery()` function.
@@ -150,7 +157,7 @@ We're using [proxy-upgrade pattern](https://blog.openzeppelin.com/proxy-patterns
   - A user-friendly [frontend](https://dashboard.dos.network) is provided to help node runners and token holders to stake, delegate, withdraw rewards, register a node, etc. (Note that running a node )
 
 <p align="center">
-  <img width="460" height="300" src="https://raw.githubusercontent.com/DOSNetwork/docs/master/_media/staking.png">
+  <img src="https://raw.githubusercontent.com/DOSNetwork/docs/master/_media/staking.png">
 </p>
 
 
@@ -325,18 +332,12 @@ Try this gist on [remix](http://remix.ethereum.org/#gist=f39845c47564c9ff9808574
 Try this gist out on [remix](http://remix.ethereum.org/#gist=3b2ca0410af407497bdc70ffe79ee123&optimize=false&version=soljson-v0.5.16+commit.9c3226ce.js). The example is also [deployed](https://rinkeby.etherscan.io/address/0x46b6a34b5e96519001162140a635ee0895bd284d) on rinkeby testnet.
 
 
+
 ## Acquire Testnet DOS Tokens
 * [Testnet DOS Token](https://rinkeby.etherscan.io/address/0x214e79c85744cd2ebbc64ddc0047131496871bee)
 * Please fill in this [form](https://docs.google.com/forms/d/e/1FAIpQLSe7Kf1RvGa2p5SjP4eGAp-fw2frauOl6CDORnHK0-TNbjho9w/viewform) to request testnet tokens.
-
-
-## Security deposit and payment
-Under design and implementation.
-
-
-## Node registry frontend and network stats scanner
-Under design and implementation.
-
+* Testnet deployments:
+ - [TODO]
 
 
 ## Appendix

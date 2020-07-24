@@ -145,13 +145,13 @@ function __callback__(uint requestId, uint generatedRandom)
 We're using [proxy-upgrade pattern](https://blog.openzeppelin.com/proxy-patterns/) for contracts that directly touch money (i.e. `DOSPayment` and `Staking` contract)
 * [DOSAddressBridge](https://etherscan.io/address/0x98a0e7026778840aacd28b9c03137d32e06f5ff1) - Connector that contains all system contratcs' addresses.
 * [CommitReveal](https://etherscan.io/address/0x144ed0555269628049f76da2adbdcdf3aa488e0e) - Conceals details of [commit-reveal scheme](https://en.wikipedia.org/wiki/Commitment_scheme), which is used to generate a secure and unpredictable genesis random number by multiparties in every bootstrap phase.
-* [DOSProxy](https://etherscan.io/address/0x4dd79f907f4D5d8952FEf1eFA0B5d0467c612Cb3) - Conceals details such as request handling, random group selection, threshold signature verification, user-defined callback function invocation, response parsing, etc.
+* [DOSProxy](https://etherscan.io/address/0xcb56383ce19adfe53dbd93a7bebcc242bd3de47e) - Conceals details such as request handling, random group selection, threshold signature verification, user-defined callback function invocation, response parsing, etc.
 * `DOSPayment` - Conseals details of oracle request payment schemes and other node runners' validity judgement.
-  - Payment gateway (proxy): https://etherscan.io/address/0xCa316AFC8453598dC3627FD46aE915F9F9407B51
-  - Payment implementation: https://etherscan.io/address/0x5C94E305998e4be76Ba7A1e2d6Cf08c84aFD3Ce8
+  - Payment gateway (proxy): https://etherscan.io/address/0x7b8d5a37008382b2c7e8e15ecf3c2727e38a6ac6
+  - Payment implementation: https://etherscan.io/address/0x24286C5a340bF99EDB2d7e7D114477987d34816F
 * `Staking` - Both eligible node runners and normal token holders (delegators) are able to earn staking rewards:
-  - Staking gateway (proxy): https://etherscan.io/address/0x6D6E2E36367B7175aCaCb75b184bB8DbE9aFE863
-  - Staking implementation: https://etherscan.io/address/0x2F61457Fb685AEae17fCCF3941f74783384f3524
+  - Staking gateway (proxy): https://etherscan.io/address/0x5dbef8e9e83a17d4d1d4c65a1e26133edae851dc
+  - Staking implementation: https://etherscan.io/address/0x33997032a8d97638b0a5C5985E467344CBADB3a7
   - Node runners earn staking rewards by staking at least 800K tokens (or lessen a bit by owning [DropBurn](https://medium.com/dos-network/introducing-dropburn-a-new-model-to-bootstrap-staking-network-3b2c605dd276) token) themselves and join the network to provide oracle services.
   - Normal token holders earn staking rewards by delegating to eligible nodes, they may need to pay a percentage of earned rewards to delegated nodes.
   - A user-friendly [frontend](https://dashboard.dos.network) is provided to help node runners and token holders to stake, delegate, withdraw rewards, register a node, etc. (Note that running a node )

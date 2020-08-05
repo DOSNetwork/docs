@@ -1,7 +1,7 @@
 ## Quick Start
 
 ### Setup:
-Developers just need to make their contract inheriting from [DOSOnChainSDK](https://github.com/DOSNetwork/eth-contracts/blob/master/contracts/DOSOnChainSDK.sol) in order to use the oracle services. For each data request or off-chain generated random number request, 50 DOS token is needed (the number may change in future depending on usage cost).
+Developers just need to make their contract inheriting from [DOSOnChainSDK](https://github.com/DOSNetwork/eth-contracts/blob/master/contracts/DOSOnChainSDK.sol) in order to use the oracle services. For each data request or off-chain generated random number request, **20 DOS token** is needed (the number may change in future depending on usage cost).
 - ``
 
 
@@ -171,7 +171,7 @@ We're using [proxy-upgrade pattern](https://blog.openzeppelin.com/proxy-patterns
   import "./DOSOnChainSDK.sol";
 
   // An example get latest ETH-USD price from Coinbase
-  contract CoinbaseEthUsd is DOSOnChainSDK {
+  contract CoinbaseEthPriceFeed is DOSOnChainSDK {
     using utils for *;
 
     // Struct to hold parsed floating string "123.45"
@@ -181,7 +181,7 @@ We're using [proxy-upgrade pattern](https://blog.openzeppelin.com/proxy-patterns
     }
     uint queryId;
     string public price_str;
-    ethusd public prices;
+    ethusd public price;
 
     event GetPrice(uint integral, uint fractional);
 
@@ -192,7 +192,7 @@ We're using [proxy-upgrade pattern](https://blog.openzeppelin.com/proxy-patterns
         super.DOSSetup();
     }
 
-    function check() public {
+    function getEthUsdPrice() public {
         queryId = DOSQuery(30, "https://api.coinbase.com/v2/prices/ETH-USD/spot", "$.data.amount");
     }
 
@@ -200,16 +200,18 @@ We're using [proxy-upgrade pattern](https://blog.openzeppelin.com/proxy-patterns
         require(queryId == id, "Unmatched response");
 
         price_str = string(result);
-        prices.integral = price_str.subStr(1).str2Uint();
+        price.integral = price_str.subStr(1).str2Uint();
         int delimit_idx = price_str.indexOf('.');
         if (delimit_idx != -1) {
-            prices.fractional = price_str.subStr(uint(delimit_idx + 1)).str2Uint();
+            price.fractional = price_str.subStr(uint(delimit_idx + 1)).str2Uint();
         }
-        emit GetPrice(prices.integral, prices.fractional);
+        emit GetPrice(price.integral, price.fractional);
     }
   }
 ```
-Try this gist on [remix](http://remix.ethereum.org/#gist=f39845c47564c9ff98085749bd542d44&optimize=false&version=soljson-v0.5.16+commit.9c3226ce.js). The example is also [deployed](https://rinkeby.etherscan.io/address/0x4608bf4775bc430fae4c72de925035c2bf00197b) on rinkeby testnet.
+ - Try this gist on [remix](http://remix.ethereum.org/#gist=f39845c47564c9ff98085749bd542d44&optimize=false&version=soljson-v0.5.16+commit.9c3226ce.js).
+ - The example is also [deployed](https://etherscan.io/address/0x284e8386e94624d7a681b883d0a718ec22481536#code) on ethereum mainnet and seeded with 450 DOS tokens for anyone to try with.
+ - (On Etherscan, click `Write Contract`, select `getEthUSdPrice()` and you'll be paying a little gas. After 1 block, click `Read Contract` and see `price_str` and `price` fields. Click `Events` and `Internal Txns` to see more details.).
 
 <p align="center">
   <img width="600" height="400" src="https://raw.githubusercontent.com/DOSNetwork/docs/master/_media/remix.png">

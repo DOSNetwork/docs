@@ -1,9 +1,26 @@
 ## Quick Start
 
 ### Setup:
-Developers just need to make their contract inheriting from [DOSOnChainSDK](https://github.com/DOSNetwork/eth-contracts/blob/master/contracts/DOSOnChainSDK.sol) in order to use the oracle services. For each data request or off-chain generated random number request, **20 DOS token** is needed (the number may change in future depending on usage cost).
-- ``
+- Developers need to make their contract inheriting from [DOSOnChainSDK](https://github.com/DOSNetwork/eth-contracts/blob/master/contracts/DOSOnChainSDK.sol) in order to use the oracle services. For each data request or off-chain generated random number request, **20 DOS token** is needed (the number may change depending on usage cost).
+- In the calling contract's constructor, simply setup by calling `super.DOSSetup()`.
+- Sending several DOS tokens as fees into the calling contract. The fees can be reclaimed by the calling contract's owner by calling `DOSRefund()`.
 
+<!-- tabs:start -->
+
+#### ** Example Setup**
+```js
+contract Example is DOSOnChainSDK {
+  // ...
+  constructor() public {
+    // @dev: setup and then transfer DOS tokens into deployed contract as oracle fees.
+    // Unused fees can be reclaimed by calling DOSRefund() in the SDK.
+    super.DOSSetup();
+  }
+  // ...
+}
+```
+
+<!-- tabs:end -->
 
 
 ### Retrieving external data:
@@ -20,7 +37,7 @@ Developers just need to make their contract inheriting from [DOSOnChainSDK](http
 - `selector`: A `selector expression` provided by caller to filter out specific data fields out of the raw response, with the response data format (json, xml, or more) to be identified from the selector expression. Check the [selector expression](#selector) part for details.
 - Example usage:
 ```js
-contract Example is Ownable, DOSOnChainSDK {
+contract Example is DOSOnChainSDK {
     mapping(uint => bool) private _valid_queries;
     ...
     function CoinbaseEthPriceFeed() public {
@@ -142,7 +159,7 @@ function __callback__(uint requestId, uint generatedRandom)
 
 
 ## Deployed Contracts on Mainnet
-We're using [proxy-upgrade pattern](https://blog.openzeppelin.com/proxy-patterns/) for contracts that directly touch money (i.e. `DOSPayment` and `Staking` contract)
+We're using [proxy-upgrade pattern](https://blog.openzeppelin.com/proxy-patterns/) for contracts that touching users' money (i.e. `DOSPayment` and `Staking` contract), so that in case of emergency situation we'll be able to upgrade to a patched version without interrupting user behavior.
 * [DOSAddressBridge](https://etherscan.io/address/0x98a0e7026778840aacd28b9c03137d32e06f5ff1) - Connector that contains all system contratcs' addresses.
 * [CommitReveal](https://etherscan.io/address/0x144ed0555269628049f76da2adbdcdf3aa488e0e) - Conceals details of [commit-reveal scheme](https://en.wikipedia.org/wiki/Commitment_scheme), which is used to generate a secure and unpredictable genesis random number by multiparties in every bootstrap phase.
 * [DOSProxy](https://etherscan.io/address/0xcb56383ce19adfe53dbd93a7bebcc242bd3de47e) - Conceals details such as request handling, random group selection, threshold signature verification, user-defined callback function invocation, response parsing, etc.
@@ -154,7 +171,8 @@ We're using [proxy-upgrade pattern](https://blog.openzeppelin.com/proxy-patterns
   - Staking implementation: https://etherscan.io/address/0x33997032a8d97638b0a5C5985E467344CBADB3a7
   - Node runners earn staking rewards by staking at least 800K tokens (or lessen a bit by owning [DropBurn](https://medium.com/dos-network/introducing-dropburn-a-new-model-to-bootstrap-staking-network-3b2c605dd276) token) themselves and join the network to provide oracle services.
   - Normal token holders earn staking rewards by delegating to eligible nodes, they may need to pay a percentage of earned rewards to delegated nodes.
-  - A user-friendly [frontend](https://dashboard.dos.network) is provided to help node runners and token holders to stake, delegate, withdraw rewards, register a node, etc. (Note that running a node )
+  - A user-friendly [frontend](https://dashboard.dos.network) is provided to help node runners and token holders to stake, delegate, withdraw rewards, register a node, etc.
+  - (Note that running a node requires both on-chain stake bonding and off-chain setup of node software, which is detailed in [node runner tutorials](#))
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/DOSNetwork/docs/master/_media/staking.png">
@@ -339,7 +357,7 @@ Try this gist out on [remix](http://remix.ethereum.org/#gist=3b2ca0410af407497bd
 * [Testnet DOS Token](https://rinkeby.etherscan.io/address/0x214e79c85744cd2ebbc64ddc0047131496871bee)
 * Please fill in this [form](https://docs.google.com/forms/d/e/1FAIpQLSe7Kf1RvGa2p5SjP4eGAp-fw2frauOl6CDORnHK0-TNbjho9w/viewform) to request testnet tokens.
 * Testnet deployments:
- - [TODO]
+ - ``
 
 
 ## Appendix

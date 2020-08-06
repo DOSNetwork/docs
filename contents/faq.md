@@ -1,1 +1,24 @@
-- Fillin
+#### What is DOS Network?
+- DOS Network is a chain-agnostic layer 2 decentralized oracle network that offers realtime data feeds and verifiable computation power to mainstream blockchains. It connects on-chain smart contracts and Ðapps with off-chain data sources and unlimited computation power, enabling smart contracts with more real world use cases.
+
+#### What is the architecture of DOS Network?
+- **On-chain part**: A set of system and governance contracts are to be deployed on supported blockchains, mainly including functionalities such as request handling and response/computation result verification, node registration and staking, stats monitoring, payment processing, etc. On-chain system contracts also provide a universal interface to developers and user contracts on all supported chains.
+- **Off-chain part**: A client software implementing the core protocol running by third party users (a.k.a node operators), constituting a layer 2 distributed network serving oracle requests. Client software includes several important modules: event monitoring and chain adaptor module, distributed randomness engine module, cryptography and off-chain group consensus module, request and/or computation task processing module depending on the type of oracle service the node operator provides.
+
+#### How does DOS Network provide real world data to smart contracts?
+- It basically follows the request-response pattern. Through the on-chain SDK we develop, smart contract (developer) specifies the origin and format of the required data by making a message call (oracle request) into system contracts. The request is randomly dispatched to an off-chain worker group, inside which member nodes fetch from the specified data source and cryptographically reach off-chain consensus within the selected group. The proof along with the response data are sent back to the system contracts just in 1 transaction, triggering on-chain verification.
+- Besides the asynchronous request-response pattern, we're also building on-chain aggregation contracts for frequently used data (e.g. Coingecko price data, e.g.) for other DeFi projects to use / integrate directly. Please [contact](mailto:info@dos.network) with team for alpha usage request. (Whitelist mode for alpha stage.)
+- Unlike prediction market, DOS Network is able to connect any data/endpoint reachable in the Internet, the whole process happens automatically near real time and there is no human involvement at all.
+
+#### How to ensure the returned data is untampered?
+- DOS Network applies Verifiable Random Function (VRF) and Threshold Cryptography to drive the secure, unpredictable and verifiable random group selection. Different oracle requests will be handled by randomly selected worker groups.
+- Threshold cryptography will then be applied in the worker group to collectively generate a proof to demonstrate data integrity. Finally, the proof along with the data will be sent back together to the system contracts within one transaction for on-chain verification - any malicious submitter will be detected and punished accordingly.
+- You can check our [whitepaper](https://s3.amazonaws.com/whitepaper.dos/DOS+Network+Technical+Whitepaper.pdf) for more technical details and mathematical proofs.
+
+#### How fast is DOS Network?
+- The off-chain process is blazing fast and usually completes within less than 1 second, including event monitoring, request processing, data fetching and parsing, collective proof generation within group members, etc. That is to say, the performance bottleneck is often in the layer 1 blockchain side.
+- For Ethereum, the response is delivered in the next block (average block time ~14s) - the fastest one could achieve in theory. For other blockchains such as EOS (average block time ~0.5s) the delay will be much smaller.
+
+#### Why is the node-selection mechanism based on randomness instead of reputation?
+- We see some oracles are based on reputation to choose service nodes - node with higher reputation often leads to a bigger probability of being selected. However, reputation based solution is susceptible to centralization, collusions and targeted attacks against high-score nodes. Moreover, it easily leads to the [Matthew Effect](https://en.wikipedia.org/wiki/Matthew_effect), disincentivizing new node operators with same abilities to join the network, leading to the centralization spiral.
+- Thus we're replying on randomness to select oracle nodes. Randomness is specifically important in blockchains. For example, Proof-of-Work system achieves random block producer selection through the mining process. Verifiable Random Function (VRF) and Threshold Cryptography generate secure, unpreditable and verifiable randomness, keeping the DOS Network resistant to targeted attacks and node collusions, safe and fair for all node operators.

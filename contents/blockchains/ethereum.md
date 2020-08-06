@@ -158,28 +158,6 @@ function __callback__(uint requestId, uint generatedRandom)
 
 
 
-## Deployed Contracts on Mainnet
-We're using [proxy-upgrade pattern](https://blog.openzeppelin.com/proxy-patterns/) for contracts that touching users' money (i.e. `DOSPayment` and `Staking` contract), so that in case of emergency situation we'll be able to upgrade to a patched version without interrupting user behavior.
-* [DOSAddressBridge](https://etherscan.io/address/0x98a0e7026778840aacd28b9c03137d32e06f5ff1) - Connector that contains all system contratcs' addresses.
-* [CommitReveal](https://etherscan.io/address/0x144ed0555269628049f76da2adbdcdf3aa488e0e) - Conceals details of [commit-reveal scheme](https://en.wikipedia.org/wiki/Commitment_scheme), which is used to generate a secure and unpredictable genesis random number by multiparties in every bootstrap phase.
-* [DOSProxy](https://etherscan.io/address/0xcb56383ce19adfe53dbd93a7bebcc242bd3de47e) - Conceals details such as request handling, random group selection, threshold signature verification, user-defined callback function invocation, response parsing, etc.
-* `DOSPayment` - Conseals details of oracle request payment schemes and other node runners' validity judgement.
-  - Payment gateway (proxy): https://etherscan.io/address/0x7b8d5a37008382b2c7e8e15ecf3c2727e38a6ac6
-  - Payment implementation: https://etherscan.io/address/0x24286C5a340bF99EDB2d7e7D114477987d34816F
-* `Staking` - Both eligible node runners and normal token holders (delegators) are able to earn staking rewards:
-  - Staking gateway (proxy): https://etherscan.io/address/0x5dbef8e9e83a17d4d1d4c65a1e26133edae851dc
-  - Staking implementation: https://etherscan.io/address/0x33997032a8d97638b0a5C5985E467344CBADB3a7
-  - Node runners earn staking rewards by staking at least 800K tokens (or lessen a bit by owning [DropBurn](https://medium.com/dos-network/introducing-dropburn-a-new-model-to-bootstrap-staking-network-3b2c605dd276) token) themselves and join the network to provide oracle services.
-  - Normal token holders earn staking rewards by delegating to eligible nodes, they may need to pay a percentage of earned rewards to delegated nodes.
-  - A user-friendly [frontend](https://dashboard.dos.network) is provided to help node runners and token holders to stake, delegate, withdraw rewards, register a node, etc.
-  - (Note that running a node requires both on-chain stake bonding and off-chain setup of node software, which is detailed in [node runner tutorials](#))
-
-<p align="center">
-  <img src="https://raw.githubusercontent.com/DOSNetwork/docs/master/_media/staking.png">
-</p>
-
-
-
 ## More examples
 - **Example 1**: `DOSQuery()` to get latest ETH-USD price from Coinbase.
 ```js
@@ -352,12 +330,45 @@ We're using [proxy-upgrade pattern](https://blog.openzeppelin.com/proxy-patterns
 Try this gist out on [remix](http://remix.ethereum.org/#gist=3b2ca0410af407497bdc70ffe79ee123&optimize=false&version=soljson-v0.5.16+commit.9c3226ce.js). The example is also [deployed](https://rinkeby.etherscan.io/address/0x46b6a34b5e96519001162140a635ee0895bd284d) on rinkeby testnet.
 
 
+## Deployed Contracts on Mainnet
+We're using [proxy-upgrade pattern](https://blog.openzeppelin.com/proxy-patterns/) for contracts that touching users' money (i.e. `DOSPayment` and `Staking` contract), so that in case of emergency situation we'll be able to upgrade to a patched version without interrupting user behavior.
+* [DOSAddressBridge](https://etherscan.io/address/0x98a0e7026778840aacd28b9c03137d32e06f5ff1) - Connector that contains all system contratcs' addresses.
+* [CommitReveal](https://etherscan.io/address/0x144ed0555269628049f76da2adbdcdf3aa488e0e) - Conceals details of [commit-reveal scheme](https://en.wikipedia.org/wiki/Commitment_scheme), which is used to generate a secure and unpredictable genesis random number by multiparties in every bootstrap phase.
+* [DOSProxy](https://etherscan.io/address/0xcb56383ce19adfe53dbd93a7bebcc242bd3de47e) - Conceals details such as request handling, random group selection, threshold signature verification, user-defined callback function invocation, response parsing, etc.
+* `DOSPayment` - Conseals details of oracle request payment schemes and other node runners' validity judgement.
+  - Payment gateway (proxy): https://etherscan.io/address/0x7b8d5a37008382b2c7e8e15ecf3c2727e38a6ac6
+  - Payment implementation: https://etherscan.io/address/0x24286C5a340bF99EDB2d7e7D114477987d34816F
+* `Staking` - Both eligible node runners and normal token holders (delegators) are able to earn staking rewards:
+  - Staking gateway (proxy): https://etherscan.io/address/0x5dbef8e9e83a17d4d1d4c65a1e26133edae851dc
+  - Staking implementation: https://etherscan.io/address/0x33997032a8d97638b0a5C5985E467344CBADB3a7
+  - Node runners earn staking rewards by staking at least 800K tokens (or lessen a bit by owning [DropBurn](https://medium.com/dos-network/introducing-dropburn-a-new-model-to-bootstrap-staking-network-3b2c605dd276) token) themselves and join the network to provide oracle services.
+  - Normal token holders earn staking rewards by delegating to eligible nodes, they may need to pay a percentage of earned rewards to delegated nodes.
+  - A user-friendly [frontend](https://dashboard.dos.network) is provided to help node runners and token holders to stake, delegate, withdraw rewards, register a node, etc.
+  - (Note that running a node requires both on-chain stake bonding and off-chain setup of node software, which is detailed in [node runner tutorials](#))
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/DOSNetwork/docs/master/_media/staking.png">
+</p>
+
+
+## Deployed Contracts on Rinkeby Testnet
+* [DOSAddressBridge](#)
+* [CommitReveal](#)
+* [DOSProxy](#)
+* `DOSPayment`:
+  - Payment gateway (proxy): https://rinkeby.etherscan.io/address/<>
+  - Payment implementation: https://rinkeby.etherscan.io/address/<>
+* `Staking`:
+  - Staking gateway (proxy): https://rinkeby.etherscan.io/address/<>
+  - Staking implementation: https://rinkeby.etherscan.io/address/<>
+
+
 
 ## Acquire Testnet DOS Tokens
 * [Testnet DOS Token](https://rinkeby.etherscan.io/address/0x214e79c85744cd2ebbc64ddc0047131496871bee)
 * Please fill in this [form](https://docs.google.com/forms/d/e/1FAIpQLSe7Kf1RvGa2p5SjP4eGAp-fw2frauOl6CDORnHK0-TNbjho9w/viewform) to request testnet tokens.
-* Testnet deployments:
- - ``
+* Testnet DOS token Faucet:
+ - [x]
 
 
 ## Appendix

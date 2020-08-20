@@ -109,13 +109,13 @@ function __callback__(uint queryId, bytes calldata result) external auth {
   <img width="500" height="250" src="https://raw.githubusercontent.com/DOSNetwork/docs/master/_media/random.png">
 </p>
 
-- DOS Network is providing a provably secure, unstoppable and unpreditable random source for on-chain smart contracts to use. For technical details and cryptographic proofs please check our [whitepaper](#).
+- DOS Network is providing a provably secure, unstoppable and unpredictable random source for on-chain smart contracts to use. For technical details and cryptographic proofs please check our [whitepaper](#).
 
 <!-- tabs:start -->
 
 #### **DOSRadom() API**
 `function DOSRandom(uint seed) returns (uint)`:
-- `seed`: An *optional* random seed provided by caller to get more entropy. The generated random number is secure and unpreditable in safe mode even without providing this `seed`.
+- `seed`: An *optional* random seed provided by caller to get more entropy. The generated random number is secure and unpredictable in safe mode even without providing this `seed`.
 - Example usage:
 ```js
 function requestSafeRandom() public {

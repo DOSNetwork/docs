@@ -352,15 +352,15 @@ We're using [proxy-upgrade pattern](https://blog.openzeppelin.com/proxy-patterns
 
 
 ## Deployed Contracts on Rinkeby Testnet
-* [DOSAddressBridge](#)
-* [CommitReveal](#)
-* [DOSProxy](#)
+* [DOSAddressBridge](https://rinkeby.etherscan.io/address/0xeE2e9f35c9F91571535173902E7e7B4E67deE32b)
+* [CommitReveal](https://rinkeby.etherscan.io/address/0x044D8D7028eC8Fc98247d072603F5316656EcfDe)
+* [DOSProxy](https://rinkeby.etherscan.io/address/0x3f7a9FA17E84280B6782bE6a3e0029ED0cc7C9C8)
 * `DOSPayment`:
-  - Payment gateway (proxy): https://rinkeby.etherscan.io/address/<>
-  - Payment implementation: https://rinkeby.etherscan.io/address/<>
+  - Payment gateway (proxy): https://rinkeby.etherscan.io/address/0x306d78A9Cf1116513220C908C5D950914D797682
+  - Payment implementation: https://rinkeby.etherscan.io/address/0x6b89f9C6bD11B14ae17DAfba4C578DdA527E7EF3
 * `Staking`:
-  - Staking gateway (proxy): https://rinkeby.etherscan.io/address/<>
-  - Staking implementation: https://rinkeby.etherscan.io/address/<>
+  - Staking gateway (proxy): https://rinkeby.etherscan.io/address/0x064fa6a739580a9bA8cfeFDc271fa5585BC274e3
+  - Staking implementation: https://rinkeby.etherscan.io/address/0xF8c60131E415d105F1595613aF1637831D654F80
 
 
 

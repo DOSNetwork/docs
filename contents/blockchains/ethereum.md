@@ -205,9 +205,9 @@ function __callback__(uint requestId, uint generatedRandom)
     }
   }
 ```
- - Try this gist on [remix](http://remix.ethereum.org/#gist=f39845c47564c9ff98085749bd542d44&optimize=false&version=soljson-v0.5.16+commit.9c3226ce.js).
+ - Try this gist on [remix](http://remix.ethereum.org/#gist=f39845c47564c9ff98085749bd542d44&optimize=true&version=soljson-v0.5.17+commit.d19bba13.js).
  - The example is also [deployed](https://etherscan.io/address/0x284e8386e94624d7a681b883d0a718ec22481536#code) on ethereum mainnet and seeded with 450 DOS tokens for anyone to try with.
- - (On Etherscan, click `Write Contract`, select `getEthUSdPrice()` and you'll be paying a little gas. After 1 block, click `Read Contract` and see `price_str` and `price` fields. Click `Events` and `Internal Txns` to see more details.).
+ - (On Etherscan, click `Write Contract`, click `Connect to Web3`. Then select `getEthUSdPrice()` and you'll be paying a little gas. After 1 block, click `Read Contract` and see `price_str` and `price` fields. Click `Events` and `Internal Txns` to see more details.).
 
 <p align="center">
   <img width="600" height="400" src="https://raw.githubusercontent.com/DOSNetwork/docs/master/_media/remix.png">
@@ -327,7 +327,9 @@ function __callback__(uint requestId, uint generatedRandom)
     }
   }
 ```
-Try this gist out on [remix](http://remix.ethereum.org/#gist=3b2ca0410af407497bdc70ffe79ee123&optimize=false&version=soljson-v0.5.16+commit.9c3226ce.js). The example is also [deployed](https://rinkeby.etherscan.io/address/0x46b6a34b5e96519001162140a635ee0895bd284d) on rinkeby testnet.
+ - Try this gist out on [remix](http://remix.ethereum.org/#gist=3b2ca0410af407497bdc70ffe79ee123&optimize=true&evmVersion=null&version=soljson-v0.5.17+commit.d19bba13.js).
+ - This example is also [deployed](https://rinkeby.etherscan.io/address/0xb156032041f83eb6d96916aada5c7dbdd338dccb) on rinkeby testnet.
+ - (On Etherscan, click `Write Contract`, click `Connect to Web3`. Then select `play()` and you need to fill in 2 arguments: the amount of `testnet ether` you'd like to bet, and a `rollUnder` number. If the off-chain collectively generated random number is less than the `rollUnder` you provide then you win, otherwise you lose the amount you bet. After 1 block, click `Internal Txns` and `ReceivedBet & PlayerWin / PlayerLose` Events to see more details.
 
 
 ## Deployed Contracts on Mainnet

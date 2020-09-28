@@ -362,7 +362,7 @@ We're using [proxy-upgrade pattern](https://blog.openzeppelin.com/proxy-patterns
   - Payment implementation: https://rinkeby.etherscan.io/address/0x6b89f9C6bD11B14ae17DAfba4C578DdA527E7EF3
 * `Staking`:
   - Staking gateway (proxy): https://rinkeby.etherscan.io/address/0x064fa6a739580a9bA8cfeFDc271fa5585BC274e3
-  - Staking implementation: https://rinkeby.etherscan.io/address/0xF8c60131E415d105F1595613aF1637831D654F80
+  - Staking implementation: https://rinkeby.etherscan.io/address/0x9faaebe59eaf3132c3cf42a947bab11408d12296
 
 
 

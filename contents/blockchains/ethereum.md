@@ -342,7 +342,7 @@ We're using [proxy-upgrade pattern](https://blog.openzeppelin.com/proxy-patterns
   - Payment implementation: https://etherscan.io/address/0x24286C5a340bF99EDB2d7e7D114477987d34816F
 * `Staking` - Both eligible node runners and normal token holders (delegators) are able to earn staking rewards:
   - Staking gateway (proxy): https://etherscan.io/address/0x5dbef8e9e83a17d4d1d4c65a1e26133edae851dc
-  - Staking implementation: https://etherscan.io/address/0x33997032a8d97638b0a5C5985E467344CBADB3a7
+  - Staking implementation: https://etherscan.io/address/0x6a829E0EB032FA39D0444D29DFd80Bd3AE91C5B9
   - Node runners earn staking rewards by staking at least 800K tokens (or lessen a bit by owning [DropBurn](https://medium.com/dos-network/introducing-dropburn-a-new-model-to-bootstrap-staking-network-3b2c605dd276) token) themselves and join the network to provide oracle services.
   - Normal token holders earn staking rewards by delegating to eligible nodes, they may need to pay a percentage of earned rewards to delegated nodes.
   - A user-friendly [frontend](https://dashboard.dos.network) is provided to help node runners and token holders to stake, delegate, withdraw rewards, register a node, etc.

@@ -20,7 +20,7 @@ In the high level DOS Network consist of two parts: on-chain smart contract part
 
 
 ## Recent update
-The **mainnet v1.0.1** has recently been launched on Ethereum network on July 2020. Currently a group consists of three nodes, with functionalities including threshold BLS group signing, on-chain aggregated BLS signature verification, verifiable random number generation, off-chain data query and secure random number request and so on.
+The **mainnet v1.0.2** has recently been launched on Ethereum network on July 2020. Currently a group consists of three nodes, with functionalities including threshold BLS group signing, on-chain aggregated BLS signature verification, verifiable random number generation, off-chain data query and secure random number request and so on.
 
 Please check [developers guide](contents/blockchains/ethereum) and examples to start using our on-chain SDK to fetch external data and request secure random numbers within your smart contracts, and stay tuned for more updates and future releases.
 

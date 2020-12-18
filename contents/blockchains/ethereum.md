@@ -336,7 +336,7 @@ function __callback__(uint requestId, uint generatedRandom)
 We're using [proxy-upgrade pattern](https://blog.openzeppelin.com/proxy-patterns/) for contracts that touching users' money (i.e. `DOSPayment` and `Staking` contract), so that in case of emergency situation we'll be able to upgrade to a patched version without interrupting user behavior.
 * [DOSAddressBridge](https://etherscan.io/address/0x98a0e7026778840aacd28b9c03137d32e06f5ff1) - Connector that contains all system contratcs' addresses.
 * [CommitReveal](https://etherscan.io/address/0x144ed0555269628049f76da2adbdcdf3aa488e0e) - Conceals details of [commit-reveal scheme](https://en.wikipedia.org/wiki/Commitment_scheme), which is used to generate a secure and unpredictable genesis random number by multiparties in every bootstrap phase.
-* [DOSProxy](https://etherscan.io/address/0xcb56383ce19adfe53dbd93a7bebcc242bd3de47e) - Conceals details such as request handling, random group selection, threshold signature verification, user-defined callback function invocation, response parsing, etc.
+* [DOSProxy](https://etherscan.io/address/0x1402c061e2aec7b41ae4911b40f7b340489dd1da) - Conceals details such as request handling, random group selection, threshold signature verification, user-defined callback function invocation, response parsing, etc.
 * `DOSPayment` - Conseals details of oracle request payment schemes and other node runners' validity judgement.
   - Payment gateway (proxy): https://etherscan.io/address/0x7b8d5a37008382b2c7e8e15ecf3c2727e38a6ac6
   - Payment implementation: https://etherscan.io/address/0x24286C5a340bF99EDB2d7e7D114477987d34816F
@@ -356,7 +356,7 @@ We're using [proxy-upgrade pattern](https://blog.openzeppelin.com/proxy-patterns
 ## Deployed Contracts on Rinkeby Testnet
 * [DOSAddressBridge](https://rinkeby.etherscan.io/address/0xeE2e9f35c9F91571535173902E7e7B4E67deE32b)
 * [CommitReveal](https://rinkeby.etherscan.io/address/0x044D8D7028eC8Fc98247d072603F5316656EcfDe)
-* [DOSProxy](https://rinkeby.etherscan.io/address/0x3f7a9FA17E84280B6782bE6a3e0029ED0cc7C9C8)
+* [DOSProxy](https://rinkeby.etherscan.io/address/0xAb09D3A9998c918Ffa796F6449D8515e5C7DB8a2)
 * `DOSPayment`:
   - Payment gateway (proxy): https://rinkeby.etherscan.io/address/0x306d78A9Cf1116513220C908C5D950914D797682
   - Payment implementation: https://rinkeby.etherscan.io/address/0x6b89f9C6bD11B14ae17DAfba4C578DdA527E7EF3

@@ -6,8 +6,8 @@
 
 - [XPath Online Evaluator](http://www.utilities-online.info/xpath)
 
-- [Network Explorer and Staking Dashboard](https://dashboard.dos.network/staking): Switch network type to Rinkeby to develop / test on the rinkeby testnet.
+- [DEX Liquidity Provider Incentives](https://medium.com/dos-network/dos-network-tokenomics-update-liquidity-rewards-and-token-burning-events-f8aa4c429d5b)
 
-- [DEX Liquidity Provider Incentives](https://lp.dos.network)
+- [Network Explorer and Staking Dashboard](https://dashboard.dos.network)
 
-- 
+- [Data Streams UI](#)

@@ -25,7 +25,9 @@ contract Example is DOSOnChainSDK {
 
 ## Request Any Data
 - Smart contract requests for external data by calling `DOSQuery()` function. The whole process is an asynchronous one - i.e. it merely returns a unique `queryId` that caller caches for bookkeeping and future identification, with the real response coming back through the `__callback__()` function.
+
 - The response data will be backfilled through the `__callback__` function along with corresponding `queryId`. Instead of backfilling the whole raw response we're using [selector expression](#selector) to filter `json` and `xml/html` formated response, developers are able to specify interesting data fields in `DOSQuery()` function.
+
 - Example usage:
 
 <!-- tabs:start -->
@@ -105,6 +107,7 @@ function __callback__(uint queryId, bytes calldata result) external auth {
 
 ## Request VRF Randomness
 - Randomness is particularly important for many Dapps and games, however, it's impossible to generate a secure and unpredictable random number in pure deterministic environment:
+
 <p align="center">
   <img width="500" height="250" src="https://raw.githubusercontent.com/DOSNetwork/docs/master/_media/random.png">
 </p>

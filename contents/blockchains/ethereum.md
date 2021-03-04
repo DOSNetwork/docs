@@ -12,7 +12,7 @@ We're using [proxy-upgrade pattern](https://blog.openzeppelin.com/proxy-patterns
   - Node runners earn staking rewards by staking at least 800K tokens (or lessen a bit by owning [DropBurn](https://medium.com/dos-network/introducing-dropburn-a-new-model-to-bootstrap-staking-network-3b2c605dd276) token) themselves and join the network to provide oracle services.
   - Normal token holders earn staking rewards by delegating to eligible nodes, they may need to pay a percentage of earned rewards to delegated nodes.
   - A user-friendly [frontend](https://dashboard.dos.network) is provided to help node runners and token holders to stake, delegate, withdraw rewards, register a node, etc.
-  - (Note that running a node requires both on-chain stake bonding and off-chain setup of node software, which is detailed in [node runner tutorials](#))
+  - (Note that running a node requires both on-chain stake bonding and off-chain setup of node software, which is detailed in [node runner tutorials](https://medium.com/dos-network/instructions-of-launching-a-node-in-dos-network-932e73a91a75))
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/DOSNetwork/docs/master/_media/staking.png">

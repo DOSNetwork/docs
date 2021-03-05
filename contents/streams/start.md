@@ -1,6 +1,6 @@
-## Introduction to Data Streams
+## Introducing Data Streams
 <p align="center">
-  <img src="https://raw.githubusercontent.com/DOSNetwork/docs/heco/_media/streams_ui.png">
+  <img width="880" height="660" src="https://raw.githubusercontent.com/DOSNetwork/docs/heco/_media/streams_ui.png">
 </p>
 
 * Data Streams provide real-time market prices of popular assests from high-quality data sources, secured by off-chain decentralized oracle network and validated by on-chain smart contracts before making available to dependent smart contracts.

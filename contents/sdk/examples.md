@@ -1,5 +1,5 @@
 - **Example 1**: `DOSQuery()` to get latest ETH-USD price from Coinbase.
-```js
+```solidity
   pragma solidity ^0.5.0;
 
   import "./utils.sol";
@@ -54,7 +54,7 @@
 
 
 - **Example 2**: A `SimpleDice` game with no insider trading or house edge, based on smart contract plus secure and unpredictable random number generated through `DOSRandom()`.
-```js
+```solidity
   pragma solidity ^0.5.0;
 
   import "./DOSOnChainSDK.sol";

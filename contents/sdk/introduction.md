@@ -8,7 +8,7 @@
 <!-- tabs:start -->
 
 #### **Example Setup**
-```js
+```solidity
 contract Example is DOSOnChainSDK {
   // ...
   constructor() public {
@@ -38,7 +38,7 @@ contract Example is DOSOnChainSDK {
 - `dataSource`: Path to the data source specified by caller.
 - `selector`: A `selector expression` provided by caller to filter out specific data fields out of the raw response, with the response data format (json, xml, or more) to be identified from the selector expression. Check the [selector expression](#selector) part for details.
 - Example usage:
-```js
+```solidity
 contract Example is DOSOnChainSDK {
     mapping(uint => bool) private _valid_queries;
     ...
@@ -60,7 +60,7 @@ contract Example is DOSOnChainSDK {
 - `queryId`: A unique `queryId` returned by `DOSQuery()` to differenciate parallel responses.
 - `result`: Corresponding response in `bytes`.
 - Example usage:
-```js
+```solidity
 function __callback__(uint queryId, bytes calldata result) external auth {
     // Check whether @queryId corresponds to a previous cached one
     require(_valid_queries[queryId], "Err-resp-with-invalid-queryId");
@@ -72,35 +72,33 @@ function __callback__(uint queryId, bytes calldata result) external auth {
 ```
 <!-- tabs:end -->
 
-- `DOSOnChainSDK` also provides built-in utility functions for developers to easily process `string / bytes`: 
-```js
-  library utils {
-      function subStr(string a, uint start, uint len) internal pure returns(string);
-      function subStr(string a, uint start) internal pure returns(string);
-      function subStr(bytes a, uint start, uint len) internal pure returns(bytes);
-      function subStr(bytes a, uint start) internal pure returns(bytes);
-      function indexOf(string haystack, string needle) internal pure returns(int);
-      function indexOf(bytes haystack, bytes needle) internal pure returns(int);
-      function strConcat(string a, string b) internal pure returns(string);
-      function bytesConcat(bytes a, bytes b) internal pure returns(bytes);
-      function strCompare(string a, string b) internal pure returns(int);
-      function bytesCompare(bytes a, bytes b) internal pure returns(int);
-      function strEqual(string a, string b) internal pure returns(bool);
-      function bytesEqual(bytes a, bytes b) internal pure returns(bool);
+- We also provide utility functions for developers to easily process `string / bytes`: 
+```solidity
+  library StringUtils {
+      function subStr(string memory a, uint start, uint len) internal pure returns(string memory);
+      function subStr(string memory a, uint start) internal pure returns(string memory);
+      function subStr(bytes memory a, uint start, uint len) internal pure returns(bytes memory);
+      function subStr(bytes memory a, uint start) internal pure returns(bytes memory);
+      function indexOf(string memory haystack, string memory needle) internal pure returns(uint);
+      function indexOf(bytes memory haystack, bytes memory needle) internal pure returns(uint);
+      function count(string memory str, string memory delimiter) internal pure returns(uint);
+      function split(string memory str, string memory delimiter) internal pure returns(string[] memory);
+      function split(bytes memory str, bytes memory delimiter) internal pure returns(bytes[] memory);
+      function strConcat(string memory a, string memory b) internal pure returns(string memory);
+      function bytesConcat(bytes memory a, bytes memory b) internal pure returns(bytes memory);
+      function strCompare(string memory a, string memory b) internal pure returns(int);
+      function bytesCompare(bytes memory a, bytes memory b) internal pure returns(int);
+      function strEqual(string memory a, string memory b) internal pure returns(bool);
+      function bytesEqual(bytes memory a, bytes memory b) internal pure returns(bool);
 
-      function uint2Str(uint x) internal pure returns(string);
-      function uint2HexStr(uint x) internal pure returns(string);
-      function addr2Str(address x) internal pure returns(string);
-      function str2Addr(string a) internal pure returns(address);
-      function str2Uint(string a) internal pure returns(uint);
-      function hexStr2Uint(string a) internal pure returns(uint);
+      function uint2Str(uint x) internal pure returns(string memory);
+      function uint2HexStr(uint x) internal pure returns(string memory);
+      function addr2Str(address x) internal pure returns(string memory);
+      function str2Addr(string memory a) internal pure returns(address);
+      function str2Uint(string memory a) internal pure returns(uint);
+      function hexStr2Uint(string memory a) internal pure returns(uint);
       function byte2Uint(byte b) internal pure returns(uint);
       function hexByte2Uint(byte b) internal pure returns(uint);
-  }
-
-  contract DOSOnChainSDK {
-      using utils for *;
-      // ...
   }
 ```
 
@@ -120,7 +118,7 @@ function __callback__(uint queryId, bytes calldata result) external auth {
 `function DOSRandom(uint seed) returns (uint)`:
 - `seed`: An *optional* random seed provided by caller to get more entropy. The generated random number is secure and unpredictable in safe mode even without providing this `seed`.
 - Example usage:
-```js
+```solidity
 function requestSafeRandom() public {
     uint requestId = DOSRandom(now);
     _valid[requestId] = true;
@@ -134,7 +132,7 @@ function requestSafeRandom() public {
 - `generatedRandom`: Generated secure random number for the specific `requestId`.
 - Example usage:
 
-```js
+```solidity
 modifier auth(uint id) {
     // Exclude malicious callback responses.
     require(msg.sender == fromDOSProxyContract(),

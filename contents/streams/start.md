@@ -7,18 +7,20 @@
 
 * Data is guaranteed to be updated either every windowSize (e.g. 20 minutes) or when the latest data from data source is beyond the pre-determined threashold (e.g. ±0.5%) of last updated result, whichever happenes first.
 
-* Data streams' results can be read by External Own Accounts (`EOA`) or consumed (through `EVM call`) by **whitelisted** downstream smart contracts, **freely**.
+* Data streams' results can be read by External Own Accounts (`EOA`) or consumed (through `EVM call`) by downstream smart contracts, **freely** for now.
 
 * Please [contact](mailto:info@dos.network) DOS Team if you're developers and want to access Data Streams in your smart contracts freely. We're glad to onboard more projects / developers and we have development grants to boost the usage and ecosystem.
 
+* Please note that each data stream has a switch called `whitelistEnabled`, which is currently disabled. Once turned on, only whitelisted smart contracts can consume price data. Data streams are made for the public good and open to everyone for now to bootstrap both DeFi & DOS ecosystems on supported chains, but there're both technical & operational efforts to keep data streams secure and accurate, thus we highly encourage projects / developers to contact the team to get your smart contracts whitelisted beforehead, as well as receive news of latest supported streams.
+
 
 ## Get Latest Price Data
-* For your smart contracts to read latest price data, simply plugin [StreamInterface](https://github.com/DOSNetwork/smart-contracts/blob/master/contracts/interfaces/StreamInterface.sol) and call `latestResult()` like below (also remember to request to make your contracts whitelisted):
+* For your smart contracts to read latest price data, simply plugin [StreamInterface](https://github.com/DOSNetwork/smart-contracts/blob/master/contracts/interfaces/StreamInterface.sol) and call `latestResult()` like below.
 
 <!-- tabs:start -->
 
 #### **Example Code**
-```js
+```solidity
 pragma solidity 0.5.17;
 
 import "github.com/DOSNetwork/smart-contracts/contracts/interfaces/StreamInterface.sol";
@@ -58,7 +60,7 @@ contract BTCLatestPriceExample {
 <!-- tabs:start -->
 
 #### **Example Code**
-```js
+```solidity
 pragma solidity 0.5.17;
 
 import "github.com/DOSNetwork/smart-contracts/contracts/interfaces/StreamInterface.sol";

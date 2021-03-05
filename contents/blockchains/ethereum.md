@@ -43,7 +43,7 @@ We're using [proxy-upgrade pattern](https://blog.openzeppelin.com/proxy-patterns
 ### Selector
 The selector expression is following [JSONPath](https://www.npmjs.com/package/jsonpath) and [XPath](https://en.wikipedia.org/wiki/XPath) rules to filter components from responses.
 ##### Json example and selector expression:
-```js
+```solidity
 {
     "store": {
         "book": [

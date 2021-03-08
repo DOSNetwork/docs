@@ -26,17 +26,17 @@ pragma solidity 0.5.17;
 import "github.com/DOSNetwork/smart-contracts/contracts/interfaces/StreamInterface.sol";
 
 contract BTCLatestPriceExample {
-    StreamInterface public stream;
+    IStream public stream;
     uint public decimal;
 
     /**
      * Network: Heco Testnet
      * Description: BTC/USD
      * Decimal: stream.decimal()
-     * Address: 0xd0ad1BE0D66803af941F1beb7808fb6b884E9aE7
+     * Address: 0x2022737ddC95b15d55E452C9E8418899063fc196
      */
     constructor() public {
-        stream = StreamInterface(0xd0ad1BE0D66803af941F1beb7808fb6b884E9aE7);
+        stream = IStream(0x2022737ddC95b15d55E452C9E8418899063fc196);
         decimal = stream.decimal();
     }
 
@@ -66,17 +66,17 @@ pragma solidity 0.5.17;
 import "github.com/DOSNetwork/smart-contracts/contracts/interfaces/StreamInterface.sol";
 
 contract BTCTwapPriceExample {
-    StreamInterface public stream;
+    IStream public stream;
     uint public decimal;
 
     /**
      * Network: Heco Testnet
      * Description: BTC/USD
      * Data Decimal: stream.decimal()
-     * Address: 0xd0ad1BE0D66803af941F1beb7808fb6b884E9aE7
+     * Address: 0x2022737ddC95b15d55E452C9E8418899063fc196
      */
     constructor() public {
-        stream = StreamInterface(0xd0ad1BE0D66803af941F1beb7808fb6b884E9aE7);
+        stream = IStream(0x2022737ddC95b15d55E452C9E8418899063fc196);
         decimal = stream.decimal();
     }
 

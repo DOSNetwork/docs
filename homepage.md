@@ -12,7 +12,7 @@ Compared with other centralized or decentralized oracle solutions, DOS Network h
 
 
 ## Overview
-The vision is to offer standard and complete set of oracle services to mainstream blockchains. Right now it's being built on Ethereum first, however, we're actively exploring and integrating with other blockchains like Tron, Thunder, Zilliqa, QuarkChain, etc.
+The vision is to offer standard and complete set of oracle services to mainstream blockchains. Right now it has been launched on Ethereum and Huobi HecoChain, however, we're actively exploring and integrating with other blockchains like Binance Smart Chain, OKExChain, Polkadot, etc.
 
 In the high level DOS Network consist of two parts: on-chain smart contract part and off-chain P2P network (client) part:
 * **On-chain smart contract**: A set of DOS system contracts are deployed on supported blockchains, including functionalities such as request handling and response/computation result verification, node registration and staking, group public key registration, stats monitoring, payment processing, etc. On-chain system contracts expose a universal interface to all user contracts across supported chains.

@@ -5,7 +5,8 @@
 
 * Data Streams provide real-time market prices of popular assests from high-quality data sources, secured by off-chain decentralized oracle network and validated by on-chain smart contracts before making available to dependent smart contracts.
 
-* Data is guaranteed to be updated either every windowSize (e.g. 20 minutes) or when the latest data from data source is beyond the pre-determined threashold (e.g. ±0.5%) of last updated result, whichever happenes first.
+* Stream data is guaranteed to be updated either every time window (e.g. 20 minutes) or when the latest data from data source is beyond the predetermined threshold (e.g. ±0.5%) of the last updated data, whichever happens first.
+
 
 * Data streams' results can be read by External Own Accounts (`EOA`) or consumed (through `EVM call`) by downstream smart contracts, **freely** for now.
 

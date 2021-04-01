@@ -112,7 +112,7 @@ contract BTCTwapPriceExample {
 ## Supported Assets & Data Sources
 * **Crypto**:
   - Data Source 1: [Coingecko](https://www.coingecko.com/en/api)
-  - Supported Assets: `BTC/USD`, `ETH/USD`, `DOT/USD`, `HT/USD`, `DOS/USD`
+  - Supported Assets: `BTC/USD`, `ETH/USD`, `DOT/USD`, `HT/USD`, `DOS/USD`, `FIL/USD`, `HPT/USD`
 
 * **Stocks**:
   - Data Source 1: [IEXCloud](#)
